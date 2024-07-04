@@ -39,7 +39,7 @@ public class Waves {
             glTranslated(0,-0.5,0);
             glBegin(GL_LINE_STRIP);
             for(double i = 0; i<=1; i+= (double) 1 /SAMPLES){
-                glColor3d(Waves.func1(i), Waves.func2(i), 1- Waves.func1(i+Time.getTime()));
+                glColor3d(Waves.func1(i+Time.getTime()), 0, 0);
                 glVertex3d(Waves.func1(i*PI), Waves.func2(i*PI),0);
             }
             glEnd();

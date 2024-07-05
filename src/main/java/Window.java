@@ -1,3 +1,5 @@
+import Input.KeyListener;
+import Input.MouseListener;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
@@ -62,23 +64,23 @@ public class Window {
         GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         if(videoMode==null) return;
 
-        int resolutionScale = 1;
+        int width;
+        int height;
+
         try {
-            resolutionScale = Integer.parseInt(Settings.getProperty("ResolutionScale"));
-            if(resolutionScale==0) {
-                System.err.println("Resolution scale can not be " + resolutionScale);
-                resolutionScale = 1;
-            }
-            System.out.println("Resolution scale set to " + resolutionScale);
-        } catch (IOException e) {
-           System.err.println("No Resolution Scale found");
+            width = Integer.parseInt(Settings.getProperty("Width"));
+            height = Integer.parseInt(Settings.getProperty("Height"));
+
+            System.out.println("Resolution set to " + width + "x" + height);
+        } catch (Exception e) {
+            width = videoMode.width();
+            height = videoMode.height();
+
+            System.out.println("Width and Height set to screen resolution");
+
+            System.out.println("Resolution set to " + width + "x" + height);
         }
 
-        int width = videoMode.width();
-        int height = videoMode.height();
-
-        width /= resolutionScale;
-        height/= resolutionScale;
         ration = (double) width /height;
 
         try {
@@ -91,7 +93,7 @@ public class Window {
                 System.out.println("Windowed mode is set");
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             glfwWindow = glfwCreateWindow(width, height, "Window", NULL, NULL);
             System.err.println("No Fullscreen found");
         }
@@ -101,6 +103,10 @@ public class Window {
         }
 
         GLFWErrorCallback.createPrint(System.err).set();
+        glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
+        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
+        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
 
         glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
@@ -119,7 +125,7 @@ public class Window {
                 System.out.println("VSync is off");
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             glfwSwapInterval(1);
             System.err.println("No VSync found");
         }
@@ -134,20 +140,13 @@ public class Window {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
-    private final int SAMPLES = 1000;
-
-    private void drawCircle(double x, double y, double radius){
-        glBegin(GL_LINE_STRIP);
-        for(int i = 0; i<=SAMPLES; i++){
-                glVertex3d(x+radius*sin((double) i /SAMPLES*2*PI),y+radius*cos((double) i /SAMPLES*2*PI),0);
-            }
-        glEnd();
-    }
-
     public void loop(){
 
         float lastTime = Time.getTime();
         float dt=0;
+
+        Circle circle = new Circle(0,0,1);
+
 
         while(!glfwWindowShouldClose(glfwWindow)){
 
@@ -155,11 +154,8 @@ public class Window {
 
             if(dt >= 0) {
                 glColor3d(1,1,1);
-                glPushMatrix();
-                glScaled(1/ration,1,1);
-                drawCircle(0, 0, 0.8);
-                Waves.drawHeart();
-                glPopMatrix();
+                circle.drawCircle();
+
             }
 
             if (glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)

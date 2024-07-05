@@ -1,3 +1,4 @@
-ResolutionScale = 0
-Fullscreen = 1
+Width = 600
+Height = 600
+Fullscreen = false
 VSync = false

@@ -7,24 +7,24 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Plane extends Drawable {
 
-    public Plane(String vertexFilepath, String fragmentFilepath){
-        shader = new Shader(vertexFilepath, fragmentFilepath);
+    public Plane(String fragmentFilepath){
+        shader = new Shader("Plane", fragmentFilepath);
         shader.compile();
     }
 
     @Override
     public void draw(){
         shader.use();
+        //load basic data
+        shader.uploadProjectionMatrix("uProjection");
+        shader.uploadViewMatrix("uView");
+        shader.upload1f("uTime", Time.getTime());
         sendShaderData();
         drawPlane();
         shader.detach();
     }
 
-    void sendShaderData(){
-        shader.uploadProjectionMatrix("uProjection");
-        shader.uploadViewMatrix("uView");
-        shader.upload1f("uTime", Time.getTime());
-        shader.upload1d("ration", Window.get().getRation());
+    protected void sendShaderData(){
     }
 
     protected void drawPlane(){

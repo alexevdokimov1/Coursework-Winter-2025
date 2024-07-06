@@ -73,7 +73,7 @@ public class Shader {
 
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
-        System.out.printf("Shader '%s' compiled for %d ms\n", vertexFilename, timeElapsed);
+        System.out.printf("Vertex shader '%s' and fragment shader '%s' compiled for %d ms\n", vertexFilename, fragmentFilename, timeElapsed);
     }
 
     public void use(){

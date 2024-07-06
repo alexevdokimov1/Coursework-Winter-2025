@@ -3,6 +3,7 @@ package Engine;
 import Drawable.*;
 import Input.KeyListener;
 import Input.MouseListener;
+import Input.SizeListener;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -46,6 +47,10 @@ public class Window {
         return ration;
     }
 
+    public void setRation(double newRation){
+        this.ration = newRation;
+    }
+
     public void init(){
 
         GLFWErrorCallback.createPrint(System.err).set();
@@ -56,7 +61,7 @@ public class Window {
 
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
         glfwWindowHint(GLFW_STENCIL_BITS, 4);
         glfwWindowHint(GLFW_SAMPLES, 4);
@@ -107,6 +112,7 @@ public class Window {
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
         glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+        glfwSetWindowSizeCallback(glfwWindow, SizeListener::resizeCallback);
 
         glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
@@ -140,14 +146,12 @@ public class Window {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
-
-
     public void loop(){
 
         float lastTime = Time.getTime();
         float dt=0;
 
-        Drawable test = new Heart();
+        Drawable test = new Circle(new Vector2f(0,0), 1.f, 0.02f);
 
         while(!glfwWindowShouldClose(glfwWindow)){
 

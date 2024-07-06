@@ -1,3 +1,7 @@
+package Drawable;
+
+import Engine.Time;
+
 import static java.lang.Math.*;
 import static java.lang.Math.sin;
 import static org.lwjgl.opengl.GL11.*;
@@ -19,30 +23,16 @@ public class Waves {
         glLoadIdentity();
         glBegin(GL_LINE_STRIP);
         for(double i = -1; i<=1; i+= (double) 1 /SAMPLES){
-            glColor3d(i, Waves.func2(i+Time.getTime()), 1- Waves.func2(i+Time.getTime()));
-            glVertex3d(i, Waves.func2(i+Time.getTime()),0);
+            glColor3d(i, func2(i+ Time.getTime()), 1- func2(i+ Time.getTime()));
+            glVertex3d(i, func2(i+ Time.getTime()),0);
         }
         glEnd();
 
         glBegin(GL_LINE_STRIP);
         for(double i = -1; i<=1; i+= (double) 1 /SAMPLES){
-            glColor3d(i, Waves.func1(i+Time.getTime()), 1-Waves.func2(i+Time.getTime()));
-            glVertex3d(i, Waves.func1(i+Time.getTime()),0);
+            glColor3d(i, func1(i+ Time.getTime()), 1-func2(i+ Time.getTime()));
+            glVertex3d(i, func1(i+ Time.getTime()),0);
         }
         glEnd();
-    }
-
-    public static void drawHeart(){
-        glLoadIdentity();
-        glPushMatrix();
-            glScaled(1,2,1);
-            glTranslated(0,-0.5,0);
-            glBegin(GL_LINE_STRIP);
-            for(double i = 0; i<=1; i+= (double) 1 /SAMPLES){
-                glColor3d(Waves.func1(i+Time.getTime()), 0, 0);
-                glVertex3d(Waves.func1(i*PI), Waves.func2(i*PI),0);
-            }
-            glEnd();
-        glPopMatrix();
     }
 }

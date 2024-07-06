@@ -5,6 +5,8 @@ varying vec4 position;
 
 uniform float uTime;
 
+//#define M_PI 3.1415926535897932384626433832795
+
 float func1(float t){
     return 4/9*sin(2*t)+1/3*pow(sin(t),8)*cos(3*t) + 1/8*sin(2*t)*pow(cos(247*t),4);
 }

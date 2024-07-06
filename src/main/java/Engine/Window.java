@@ -151,7 +151,7 @@ public class Window {
         float lastTime = Time.getTime();
         float dt=0;
 
-        Drawable test = new Circle(new Vector2f(0,0), 1.f, 0.02f);
+        Drawable test = new Heart();
 
         while(!glfwWindowShouldClose(glfwWindow)){
 

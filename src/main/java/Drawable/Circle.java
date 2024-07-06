@@ -18,7 +18,6 @@ public class Circle extends Plane{
 
     @Override
     protected void sendShaderData(){
-        shader.upload1d("ration", Window.get().getRation());
         shader.upload2f("circlePosition", position);
         shader.upload1f("circleRadius", radius);
         shader.upload1f("circleThickness", borderThickness);

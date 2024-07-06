@@ -1,9 +1,9 @@
 package Engine;
 
-import Drawable.Circle;
+import Drawable.*;
 import Input.KeyListener;
 import Input.MouseListener;
-import Render.Shader;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -85,16 +85,16 @@ public class Window {
 
         try {
             if(Boolean.parseBoolean(Settings.getProperty("Fullscreen"))) {
-                glfwWindow = glfwCreateWindow(width, height, "Engine.Window", glfwGetPrimaryMonitor(), NULL);
+                glfwWindow = glfwCreateWindow(width, height, "Window", glfwGetPrimaryMonitor(), NULL);
                 System.out.println("Fullscreen mode is set");
             }
             else{
-                glfwWindow = glfwCreateWindow(width, height, "Engine.Window", NULL, NULL);
+                glfwWindow = glfwCreateWindow(width, height, "Window", NULL, NULL);
                 System.out.println("Windowed mode is set");
             }
 
         } catch (Exception e) {
-            glfwWindow = glfwCreateWindow(width, height, "Engine.Window", NULL, NULL);
+            glfwWindow = glfwCreateWindow(width, height, "Window", NULL, NULL);
             System.err.println("No Fullscreen found");
         }
 
@@ -140,19 +140,21 @@ public class Window {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
+
+
     public void loop(){
 
         float lastTime = Time.getTime();
         float dt=0;
 
-        Circle circle = new Circle(0,0,1);
+        Drawable test = new Heart();
 
         while(!glfwWindowShouldClose(glfwWindow)){
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             if(dt >= 0) {
-                circle.drawCircle();
+                test.draw();
             }
 
             if (glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)

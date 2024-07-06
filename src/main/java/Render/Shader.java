@@ -1,6 +1,7 @@
 package Render;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -10,7 +11,7 @@ import java.nio.FloatBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL40.*;
 
 public class Shader {
 
@@ -72,7 +73,7 @@ public class Shader {
 
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
-        System.out.printf("Shader %s compiled for %d ms\n", vertexFilename, timeElapsed);
+        System.out.printf("Shader '%s' compiled for %d ms\n", vertexFilename, timeElapsed);
     }
 
     public void use(){
@@ -91,6 +92,14 @@ public class Shader {
         glUniform1f(glGetUniformLocation(shaderProgram, varName), value);
     }
 
+    public void upload2f(String varName, Vector2f value){
+        glUniform2f(glGetUniformLocation(shaderProgram, varName), value.x, value.y);
+    }
+
+    public void upload1d(String varName, double value){
+        glUniform1d(glGetUniformLocation(shaderProgram, varName), value);
+    }
+
     public void upload3f(String varName, Vector3f vec){
         glUniform3f(glGetUniformLocation(shaderProgram, varName), vec.x, vec.y, vec.z);
     }
@@ -101,18 +110,31 @@ public class Shader {
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, varName), false, matBuffer);
     }
 
-    public Matrix4f getModelViewMatrix() {
-        return getMatrix( GL11.GL_MODELVIEW_MATRIX );
-    }
-
-    public Matrix4f getProjectionMatrix() {
-        return getMatrix( GL11.GL_PROJECTION_MATRIX );
-    }
-
-    private Matrix4f getMatrix( int name ) {
+    public void uploadViewMatrix(String viewMatrixName) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer( 16 );
-        GL11.glGetFloatv( name, buffer );
-        return new Matrix4f( buffer );
+        GL11.glGetFloatv( GL11.GL_MODELVIEW_MATRIX, buffer );
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, viewMatrixName), false, buffer);
     }
+
+    public void uploadProjectionMatrix(String projectionMatrixName) {
+        FloatBuffer buffer = BufferUtils.createFloatBuffer( 16 );
+        GL11.glGetFloatv( GL11.GL_PROJECTION_MATRIX, buffer );
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, projectionMatrixName), false, buffer);
+    }
+
+
+//    public Matrix4f getModelViewMatrix() {
+//        return getMatrix( GL11.GL_MODELVIEW_MATRIX );
+//    }
+//
+//    public Matrix4f getProjectionMatrix() {
+//        return getMatrix( GL11.GL_PROJECTION_MATRIX );
+//    }
+//
+//    private Matrix4f getMatrix( int name ) {
+//        FloatBuffer buffer = BufferUtils.createFloatBuffer( 16 );
+//        GL11.glGetFloatv( name, buffer );
+//        return new Matrix4f( buffer );
+//    }
 
 }

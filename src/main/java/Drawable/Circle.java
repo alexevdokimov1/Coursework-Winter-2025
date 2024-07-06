@@ -1,36 +1,29 @@
 package Drawable;
 
-import static java.lang.Math.*;
-import static java.lang.Math.PI;
-import static org.lwjgl.opengl.GL11.*;
-
+import Engine.Time;
 import Engine.Window;
-import org.joml.Vector2d;
+import org.joml.Vector2f;
 
-import java.util.ArrayList;
+public class Circle extends Plane{
+    private final Vector2f position;
+    private final float radius;
+    private final float borderThickness;
 
-public class Circle {
-
-    private final static int SAMPLES = 1000;
-
-    private final ArrayList<Vector2d> coords = new ArrayList<>();
-
-    public Circle(double x, double y, double radius){
-        for(int i = 0; i<=SAMPLES; i++){
-            double xValue = x+radius*sin((double) i /SAMPLES*2*PI);
-            double yValue = y+radius*cos((double) i /SAMPLES*2*PI);
-            coords.add(new Vector2d(xValue,yValue));
-        }
+    public Circle(Vector2f position, float radius,  float borderThickness){
+        super("Plane", "CirclePlane");
+        this.position = position;
+        this.radius = radius;
+        this.borderThickness = borderThickness;
     }
 
-    public void drawCircle(){
-        glPushMatrix();
-            glScaled(1/ Window.get().getRation(),1,1);
-            glBegin(GL_LINE_STRIP);
-            for(Vector2d each : coords){
-                glVertex3d(each.x,each.y,0);
-            }
-            glEnd();
-        glPopMatrix();
+    @Override
+    protected void sendShaderData(){
+        shader.uploadProjectionMatrix("uProjection");
+        shader.uploadViewMatrix("uView");
+        shader.upload1f("uTime", Time.getTime());
+        shader.upload1d("ration", Window.get().getRation());
+        shader.upload2f("circlePosition", position);
+        shader.upload1f("circleRadius", radius);
+        shader.upload1f("circleThickness", borderThickness);
     }
 }

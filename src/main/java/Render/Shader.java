@@ -104,6 +104,11 @@ public class Shader {
         glUniform3f(glGetUniformLocation(shaderProgram, varName), vec.x, vec.y, vec.z);
     }
 
+    public void uploadBoolean(String varName, boolean soft){
+        int value = soft ? 1 : 0;
+        glUniform1i(glGetUniformLocation(shaderProgram, varName), value);
+    }
+
     public void uploadMat4(String varName, Matrix4f mat4){
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
         mat4.get(matBuffer);

@@ -9,6 +9,9 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -136,7 +139,14 @@ public class Window {
             System.err.println("No VSync found");
         }
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         glEnable(GL_DEPTH_TEST);
+        glClearDepth(1.0);
+        glDepthFunc(GL_LESS);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc (GL_GREATER, 0.1f);
 
         glOrtho(-1, 1, -1, 1, 0, 1);
         glViewport(0,0, width, height);
@@ -151,14 +161,17 @@ public class Window {
         float lastTime = Time.getTime();
         float dt=0;
 
-        Drawable test = new Heart();
+        ArrayList<Drawable> test = new ArrayList<>();
+        test.add(new Circle(new Vector2f(), 0.5f, 0.05f, false, false));
 
         while(!glfwWindowShouldClose(glfwWindow)){
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             if(dt >= 0) {
-                test.draw();
+                for(Drawable each : test){
+                    each.draw();
+                }
             }
 
             if (glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)

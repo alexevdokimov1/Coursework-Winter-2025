@@ -5,19 +5,24 @@ uniform double ration;
 uniform vec2 circlePosition;
 uniform float circleRadius;
 uniform float circleThickness;
+uniform bool soft;
+uniform bool hollow;
 
-float circleShape(float radius, vec2 position, vec2 center) {
-    float value = distance(position, center);
-    return step(radius, value);
+float sdCircle( vec2 p, float r )
+{
+    return length(p) - r;
 }
 
 void main() {
-    vec2 pixelCoord = position;
-    pixelCoord.x*=ration;
-    circlePosition.x*=ration;
+    vec2 uv = position.xy;
+    uv.x *= ration;
+    float d = sdCircle(uv, circleRadius);
+    if(hollow)
+        d = abs(d);
+    if(soft)
+        d = smoothstep(0.0, circleThickness, d);
+    else
+        d = step(circleThickness, d);
 
-    float outer = clamp(1-circleShape(circleRadius, pixelCoord, circlePosition), 0, 1);
-    float innter= clamp(1-circleShape(circleRadius-circleThickness, pixelCoord, circlePosition), 0, 1);
-    vec3 color = vec3(outer-innter);
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(1-d,1-d,1-d,1-d);
 }

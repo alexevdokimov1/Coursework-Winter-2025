@@ -6,8 +6,6 @@ uniform double ration;
 
 uniform float uTime;
 
-//#define M_PI 3.1415926535897932384626433832795
-
 vec2 grad( ivec2 z )  // replace this anything that returns a random vector
 {
     // 2D to 1D  (feel free to replace by some other)
@@ -36,7 +34,7 @@ vec2 grad( ivec2 z )  // replace this anything that returns a random vector
 float noise( in vec2 p )
 {
     ivec2 i = ivec2(floor( p ));
-    vec2 f =       fract( p );
+    vec2 f = fract( p );
 
     vec2 u = f*f*(3.0-2.0*f); // feel free to replace by a quintic smoothstep instead
 
@@ -45,7 +43,6 @@ float noise( in vec2 p )
                 mix( dot( grad( i+ivec2(0,1) ), f-vec2(0.0,1.0) ),
                      dot( grad( i+ivec2(1,1) ), f-vec2(1.0,1.0) ), u.x), u.y);
 }
-
 
 void main(){
     position = uProjection * uView * gl_Vertex;

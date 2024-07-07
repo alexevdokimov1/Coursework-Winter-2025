@@ -162,7 +162,7 @@ public class Window {
         float dt=0;
 
         ArrayList<Drawable> test = new ArrayList<>();
-        test.add(new Circle(new Vector2f(), 0.5f, 0.05f, false, false));
+        test.add(new Plane("Waves"));
 
         while(!glfwWindowShouldClose(glfwWindow)){
 

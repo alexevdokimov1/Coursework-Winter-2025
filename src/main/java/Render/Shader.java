@@ -104,9 +104,8 @@ public class Shader {
         glUniform3f(glGetUniformLocation(shaderProgram, varName), vec.x, vec.y, vec.z);
     }
 
-    public void uploadBoolean(String varName, boolean soft){
-        int value = soft ? 1 : 0;
-        glUniform1i(glGetUniformLocation(shaderProgram, varName), value);
+    public void uploadBoolean(String varName, boolean value){
+        glUniform1i(glGetUniformLocation(shaderProgram, varName), value ? 1 : 0);
     }
 
     public void uploadMat4(String varName, Matrix4f mat4){
@@ -126,20 +125,4 @@ public class Shader {
         GL11.glGetFloatv( GL11.GL_PROJECTION_MATRIX, buffer );
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, projectionMatrixName), false, buffer);
     }
-
-
-//    public Matrix4f getModelViewMatrix() {
-//        return getMatrix( GL11.GL_MODELVIEW_MATRIX );
-//    }
-//
-//    public Matrix4f getProjectionMatrix() {
-//        return getMatrix( GL11.GL_PROJECTION_MATRIX );
-//    }
-//
-//    private Matrix4f getMatrix( int name ) {
-//        FloatBuffer buffer = BufferUtils.createFloatBuffer( 16 );
-//        GL11.glGetFloatv( name, buffer );
-//        return new Matrix4f( buffer );
-//    }
-
 }

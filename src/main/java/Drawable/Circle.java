@@ -1,7 +1,5 @@
 package Drawable;
 
-import Engine.Time;
-import Engine.Window;
 import org.joml.Vector2f;
 
 public class Circle extends Plane{
@@ -18,6 +16,15 @@ public class Circle extends Plane{
         this.borderThickness = borderThickness;
         this.soft = soft;
         this.hollow = hollow;
+    }
+
+    public Circle(Vector2f position, float radius,  float borderThickness){
+        super("CirclePlane");
+        this.position = position;
+        this.radius = radius;
+        this.borderThickness = borderThickness;
+        this.soft = true;
+        this.hollow = true;
     }
 
     @Override

@@ -1,7 +1,7 @@
 uniform float uTime;
 varying vec4 position;
-
 uniform double ration;
+
 uniform vec2 circlePosition;
 uniform float circleRadius;
 uniform float circleThickness;
@@ -19,10 +19,11 @@ void main() {
     float d = sdCircle(uv, circleRadius);
     if(hollow)
         d = abs(d);
+
     if(soft)
-        d = smoothstep(0.0, circleThickness, d);
+        d = smoothstep(0, circleThickness, d);
     else
         d = step(circleThickness, d);
 
-    gl_FragColor = vec4(1-d,1-d,1-d,1-d);
+    gl_FragColor = vec4(1)-vec4(d)*1/circleThickness;
 }

@@ -4,12 +4,10 @@ import Drawable.*;
 import Input.KeyListener;
 import Input.MouseListener;
 import Input.SizeListener;
-import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -162,7 +160,7 @@ public class Window {
         float dt=0;
 
         ArrayList<Drawable> test = new ArrayList<>();
-        test.add(new Plane("Waves"));
+        test.add(new Waves(0.1f, new Vector3f(0,0,1), true, 1.f));
 
         while(!glfwWindowShouldClose(glfwWindow)){
 

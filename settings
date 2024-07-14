@@ -1,4 +1,4 @@
 #Width = 900
 #Height = 900
-Fullscreen = true
+Fullscreen = false
 VSync = false

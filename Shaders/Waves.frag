@@ -37,14 +37,37 @@ float func(float t){
     return result;
 }
 
+float func2(float t){
+
+    t /= PI/2; //scaling function
+
+    float result = sin(t);
+    float temp = 1.f;
+    for(int i = 0; i<8; i++)
+        temp *= sin(t);
+    result += 1/3*temp*sin(3*t);
+
+    temp = 1.f;
+    for(int i = 0; i<4; i++)
+        temp *= sin(247.f*t);
+
+    result += 1/8*sin(2.f*t)*temp;
+    return result;
+}
+
 void main() {
     vec2 uv = position.xy;
     uv.x *= ration;
 
-    float y = func(uv.x+speed*uTime);
+    float y1 = func(uv.x+speed*uTime);
+    float y2 = func2(uv.x+speed*uTime);
 
-    float pct = plot(uv,y);
-    vec3 color  = pct*lineColor;
+    float pct1 = plot(uv,y1);
+    float pct2 = plot(uv,y2);
 
-    gl_FragColor = vec4(color,pct);
+    vec3 color;
+    color += pct1*lineColor;
+    color += pct2 *vec3(1,0,0);
+
+    gl_FragColor = vec4(color,pct1+pct2);
 }

@@ -35,10 +35,10 @@ public class Plane extends Drawable {
 
     protected void drawPlane(){
         glBegin(GL_POLYGON);
-            glVertex3d(0,0,0);
-            glVertex3d(0,1,0);
+            glVertex3d(-1,-1,0);
+            glVertex3d(-1,1,0);
             glVertex3d(1,1,0);
-            glVertex3d(1,0,0);
+            glVertex3d(1,-1,0);
         glEnd();
     }
 }

@@ -9,14 +9,6 @@ public class Waves extends Plane{
     private final boolean soft;
     private final float speed;
 
-    public Waves(float lineWidth, Vector3f lineColor){
-        super("Waves");
-        this.lineWidth = lineWidth;
-        this.lineColor = lineColor;
-        this.soft = true;
-        this.speed = 1.f;
-    }
-
     public Waves(float lineWidth, Vector3f lineColor, boolean soft, float speed){
         super("Waves");
         this.lineWidth = lineWidth;
@@ -25,12 +17,12 @@ public class Waves extends Plane{
         this.speed = speed;
     }
 
+    public Waves(float lineWidth, Vector3f lineColor){
+        this(lineWidth, lineColor, true, 1.f);
+    }
+
     public Waves(){
-        super("Waves");
-        this.lineWidth = 0.2f;
-        this.lineColor = new Vector3f(0,0,1);
-        this.soft = true;
-        this.speed = 1.f;
+        this(0.2f, new Vector3f(0,0,1), true, 1.f);
     }
 
     @Override

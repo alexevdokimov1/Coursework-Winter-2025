@@ -19,12 +19,7 @@ public class Circle extends Plane{
     }
 
     public Circle(Vector2f position, float radius,  float borderThickness){
-        super("CirclePlane");
-        this.position = position;
-        this.radius = radius;
-        this.borderThickness = borderThickness;
-        this.soft = true;
-        this.hollow = true;
+        this(position, radius, borderThickness, true, true);
     }
 
     @Override

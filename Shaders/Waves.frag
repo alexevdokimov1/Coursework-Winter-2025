@@ -69,5 +69,5 @@ void main() {
     color += pct1*lineColor;
     color += pct2 *vec3(1,0,0);
 
-    gl_FragColor = vec4(color,pct1+pct2);
+    gl_FragColor = vec4(color,smoothstep(0.5,1.f,pct1+pct2));
 }

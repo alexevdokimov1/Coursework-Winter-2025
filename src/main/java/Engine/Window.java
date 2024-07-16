@@ -4,11 +4,11 @@ import Drawable.*;
 import Input.KeyListener;
 import Input.MouseListener;
 import Input.SizeListener;
-import org.joml.Vector3f;
+import Levels.Level;
+import Levels.Scene;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import java.util.ArrayList;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -152,24 +152,24 @@ public class Window {
         glfwShowWindow(glfwWindow);
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+        level = new Level();
+        level.init();
     }
+
+    private static Scene level;
 
     public void loop(){
 
         float lastTime = Time.getTime();
         float dt=0;
 
-        ArrayList<Drawable> test = new ArrayList<>();
-        test.add(new Waves(0.1f, new Vector3f(0,0,1), true, 1.f));
-
         while(!glfwWindowShouldClose(glfwWindow)){
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             if(dt >= 0) {
-                for(Drawable each : test){
-                    each.draw();
-                }
+                level.update(dt);
             }
 
             if (glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)

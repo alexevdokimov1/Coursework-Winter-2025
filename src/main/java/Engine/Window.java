@@ -31,6 +31,10 @@ public class Window {
         return Window.window;
     }
 
+    public long getWindow(){
+        return glfwWindow;
+    }
+
     public void run(){
         init();
         loop();
@@ -154,7 +158,6 @@ public class Window {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         level = new Level();
-        level.init();
     }
 
     private static Scene level;
@@ -171,9 +174,6 @@ public class Window {
             if(dt >= 0) {
                 level.update(dt);
             }
-
-            if (glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-                glfwSetWindowShouldClose(glfwWindow, true);
 
             glfwSwapBuffers(glfwWindow);
             glfwPollEvents();

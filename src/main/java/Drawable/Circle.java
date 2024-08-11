@@ -4,7 +4,7 @@ import org.joml.Vector2f;
 
 public class Circle extends Plane{
     private final Vector2f position;
-    private final float radius;
+    private float radius;
     private final float borderThickness;
     private final boolean soft;
     private final boolean hollow;
@@ -29,5 +29,9 @@ public class Circle extends Plane{
         shader.upload1f("circleThickness", borderThickness);
         shader.uploadBoolean("soft", soft);
         shader.uploadBoolean("hollow", hollow);
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
     }
 }

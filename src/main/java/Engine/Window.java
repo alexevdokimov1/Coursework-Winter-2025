@@ -1,6 +1,5 @@
 package Engine;
 
-import Drawable.*;
 import Input.KeyListener;
 import Input.MouseListener;
 import Input.SizeListener;

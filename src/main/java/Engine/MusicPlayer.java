@@ -21,24 +21,14 @@ public class MusicPlayer {
         AudioFormat audioFormat = audioInputStream.getFormat();
 
         // Play the audio
-        playAudio(audioInputStream);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void playAudio(AudioInputStream audioInputStream) throws LineUnavailableException, IOException {
-        // Create a SourceDataLine to play the audio
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioInputStream.getFormat());
         line = (SourceDataLine) AudioSystem.getLine(info);
         line.open(audioInputStream.getFormat());
         line.start();
 
-        byte[] buffer = new byte[1024];
-//
-//        line.drain();
-//        line.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public float getVolume() {

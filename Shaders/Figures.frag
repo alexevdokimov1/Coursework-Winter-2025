@@ -34,5 +34,5 @@ void main() {
     //set background color
     vec3 color = 0.5 + 0.5 * cos(uTime+uv.xyx+vec3(0,2,4));
 
-    gl_FragColor = vec4(1-d,1-d,1-d,1)*vec4(color, 1);
+    gl_FragColor = (vec4(1)-vec4(d))*vec4(color, 1);
 }

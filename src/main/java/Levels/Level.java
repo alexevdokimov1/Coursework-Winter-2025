@@ -2,6 +2,7 @@ package Levels;
 
 import Drawable.*;
 import Engine.MusicPlayer;
+import Engine.Time;
 import Engine.Window;
 import org.joml.Vector2f;
 
@@ -16,7 +17,7 @@ public class Level extends Scene {
 
     private float lastVolumeValue;
     private float currentVolumeAlpha;
-    long start = System.nanoTime();
+    float start = Time.getTime();
 
     public Level(){
         circle = new Circle(new Vector2f(), 0, 0.03f, true , true);
@@ -28,10 +29,10 @@ public class Level extends Scene {
     @Override
     public void update(float dt) {
 
-        long timeElapsed = System.nanoTime() - start;
-        start = System.nanoTime();
+        float timeElapsed = Time.getTime() - start;
+        start = Time.getTime();
 
-        if(currentVolumeAlpha<1) currentVolumeAlpha += (float) (timeElapsed*1E-9)*5; //music frequency
+        if(currentVolumeAlpha<1) currentVolumeAlpha += timeElapsed;
         else currentVolumeAlpha = 0;
 
         circle.draw();

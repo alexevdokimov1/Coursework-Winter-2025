@@ -6,8 +6,8 @@ import java.io.IOException;
 
 public class MusicPlayer {
 
-    private AudioInputStream audioInputStream = null;
-    private SourceDataLine line = null;
+    private AudioInputStream audioInputStream;
+    private SourceDataLine line;
 
     public MusicPlayer(String filename) {
         try {
@@ -25,6 +25,8 @@ public class MusicPlayer {
         line = (SourceDataLine) AudioSystem.getLine(info);
         line.open(audioInputStream.getFormat());
         line.start();
+        FloatControl vc = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+        vc.setValue(0.7f);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -34,7 +36,7 @@ public class MusicPlayer {
     public float getVolume() {
         try {
             int bytesRead;
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[1024*2];
             float volume = 0.f;
             if ((bytesRead = audioInputStream.read(buffer, 0, buffer.length)) != -1) {
                 line.write(buffer, 0, bytesRead);
@@ -45,7 +47,7 @@ public class MusicPlayer {
                     short sample = (short) ((buffer[i] & 0xff) | (buffer[i + 1] << 8));
                     sum += Math.abs(sample);
                 }
-                if(sum!=0) volume = 20 * (float) Math.log10(sum / (bytesRead / 2));
+                if(sum!=0) volume = 20 * (float) Math.log10(sum / (bytesRead / 2.f));
             }
             return volume;
         } catch (IOException e){

@@ -10,7 +10,6 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Heart extends Drawable {
 
-
     public Heart(){
         shader = new Shader("Heart", "Shader");
         shader.compile();
@@ -24,8 +23,6 @@ public class Heart extends Drawable {
         return sin(t)+ (double) 1 /3*pow(sin(t),8)*sin(3*t)+ (double) 1 /8*sin(2*t)*pow(sin(247*t),4);
     }
 
-    private final int SAMPLES = 1000;
-
     @Override
     public void draw(){
         shader.use();
@@ -34,6 +31,7 @@ public class Heart extends Drawable {
         shader.upload1f("uTime", Time.getTime());
         shader.upload1d("ration", Window.get().getRation());
         glBegin(GL_LINE_STRIP);
+        int SAMPLES = 1000;
         for(double i = 0; i<=1; i+= (double) 1 /SAMPLES){
             glVertex3d(func1(i*PI), func2(i*PI),0);
         }

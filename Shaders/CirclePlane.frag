@@ -25,7 +25,5 @@ void main() {
     else
         d = step(circleThickness, d);
 
-    vec3 color = 0.5 + 0.5 * cos(uTime+uv.xyx+vec3(0,2,4));
-
-    gl_FragColor = (vec4(1)-vec4(d)*1/circleThickness) * vec4(color, 1.f);
+    gl_FragColor = (vec4(1)-vec4(d)*1/circleThickness);
 }

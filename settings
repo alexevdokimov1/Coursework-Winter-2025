@@ -2,3 +2,4 @@
 #Height = 900
 Fullscreen = true
 VSync = true
+MusicVolume = 0.1

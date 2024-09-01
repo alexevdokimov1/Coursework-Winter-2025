@@ -3,7 +3,7 @@ varying vec4 position;
 uniform double ration;
 
 uniform vec2 circlePosition = vec2(0,0);
-uniform float circleRadius;
+uniform float volume;
 uniform float circleThickness = 0.03f;
 
 float sdCircle( vec2 p, float r )
@@ -15,12 +15,12 @@ void main() {
     vec2 uv = position.xy;
     uv.x *= ration;
 
-    if(abs(circleRadius)<0.03) {
+    if(abs(volume)<0.03) {
         gl_FragColor = vec4(0);
         return;
     }
 
-    float d = sdCircle(uv, circleRadius);
+    float d = sdCircle(uv, volume);
 
     d = abs(d);
 

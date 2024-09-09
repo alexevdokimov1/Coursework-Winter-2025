@@ -97,6 +97,14 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/io.github.spair/imgui-java-app -->
+		<dependency>
+			<groupId>io.github.spair</groupId>
+			<artifactId>imgui-java-app</artifactId>
+			<version>1.87.3</version>
+		</dependency>
+
+
 	</dependencies>
 
 </project>

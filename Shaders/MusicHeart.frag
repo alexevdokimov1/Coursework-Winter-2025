@@ -26,6 +26,11 @@ vec3 hashOld33( vec3 p )
     return fract(sin(p)*43758.5453123);
 }
 
+float opOnion( in vec2 p, in float r )
+{
+    return abs(sdHeart(p)) - r;
+}
+
 void main() {
     vec2 uv = position.xy;
     uv.x *= ration;
@@ -34,8 +39,12 @@ void main() {
 
     volume /= 100.f;
     sumVolume /= 1000.f;
-
-    float d = sdHeart(uv);
+    float d;
+    #if 1
+        d = sdHeart(uv);
+    #else
+        d = opOnion(uv, 0.1);
+    #endif
 
      // coloring
     vec3 col = (d>0.0) ? vec3(0) : vec3(1.0,0.0,0.0)*pow(volume, 1.5f)*2.0;

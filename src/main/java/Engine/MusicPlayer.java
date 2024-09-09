@@ -28,9 +28,9 @@ public class MusicPlayer {
     public float getVolume() {
         float volume = 0.f;
         try {
-            int bytesRead;
             byte[] buffer = new byte[1024];
-            if ((bytesRead = audioInputStream.read(buffer, 0, buffer.length)) != -1) {
+            int bytesRead = audioInputStream.read(buffer, 0, buffer.length);
+            if (bytesRead > 0) {
                 line.write(buffer, 0, bytesRead);
 
                 // Calculate the volume as the average of the absolute values of the audio samples

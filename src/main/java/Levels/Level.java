@@ -11,7 +11,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
 public class Level extends Scene {
 
-    private final MusicCircle circle;
+    private final MusicPlane circle;
     private final MusicPlayer player;
 
     private float lastVolumeValue;
@@ -19,7 +19,7 @@ public class Level extends Scene {
     private float start;
 
     public Level(){
-        circle = new MusicCircle();
+        circle = new MusicHeart();
         player = new MusicPlayer("song.wav");
         lastVolumeValue = 0;
         currentVolumeAlpha = 0;
@@ -36,7 +36,7 @@ public class Level extends Scene {
         else currentVolumeAlpha = 0;
 
         circle.draw();
-        circle.setVolume(interpolateFloatByAlpha(lastVolumeValue, player.getVolume(), currentVolumeAlpha)/100.f);
+        circle.setVolume(interpolateFloatByAlpha(lastVolumeValue, player.getVolume(), currentVolumeAlpha));
         lastVolumeValue = interpolateFloatByAlpha(lastVolumeValue, player.getVolume(), currentVolumeAlpha);
 
         for(Drawable each : actors){

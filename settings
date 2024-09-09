@@ -1,5 +1,4 @@
-#Width = 900
-#Height = 900
-Fullscreen = true
+Width = 900
+Height = 900
+Fullscreen = false
 VSync = true
-MusicVolume = 0.1

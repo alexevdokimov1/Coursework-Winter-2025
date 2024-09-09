@@ -125,20 +125,7 @@ public class Window {
         glfwShowWindow(glfwWindow);
         GL.createCapabilities();
 
-        try {
-            if(Boolean.parseBoolean(Settings.getProperty("VSync"))) {
-                glfwSwapInterval(1);
-                System.out.println("VSync is on");
-            }
-            else{
-                glfwSwapInterval(0);
-                System.out.println("VSync is off");
-            }
-
-        } catch (Exception e) {
-            glfwSwapInterval(1);
-            System.err.println("No VSync found");
-        }
+        glfwSwapInterval(0);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

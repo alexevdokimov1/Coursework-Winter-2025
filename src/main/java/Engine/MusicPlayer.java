@@ -36,7 +36,7 @@ public class MusicPlayer {
                 // Calculate the volume as the average of the absolute values of the audio samples
                 float sum = 0;
                 for (int i = 0; i < bytesRead; i += 2) {
-                    short sample = (short) ( (buffer[i + 1] << 8)); //(buffer[i] & 0xff) |
+                    short sample = (short) ( (buffer[i] & 0xff) | (buffer[i + 1] << 8));
                     sum += Math.abs(sample);
                 }
                 if(sum!=0) volume = 20 * (float) Math.log10( sum / bytesRead );

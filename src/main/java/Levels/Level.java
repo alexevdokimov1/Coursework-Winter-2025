@@ -19,10 +19,13 @@ public class Level extends Scene {
     @Override
     public void update(float dt) {
 
-
         for(Drawable each : actors){
             each.draw();
-            ((MusicPlane) each).setVolume(player.getVolume());
+
+            float currentVolume = player.getVolume();
+
+            ((MusicPlane) each).setVolume(currentVolume);
+            ((MusicPlane) each).setMaxVolume(100.f);
         }
 
         if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)

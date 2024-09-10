@@ -4,6 +4,7 @@ uniform double ration;
 
 uniform vec2 circlePosition = vec2(0,0);
 uniform float volume;
+uniform float maxVolume;
 uniform float sumVolume;
 uniform float circleThickness = 0.02f;
 
@@ -16,7 +17,7 @@ void main() {
     vec2 uv = position.xy;
     uv.x *= ration;
 
-    volume /= 100.f;
+    volume /= maxVolume;
     sumVolume /= 1000.f;
 
     float d = sdCircle(uv, volume);

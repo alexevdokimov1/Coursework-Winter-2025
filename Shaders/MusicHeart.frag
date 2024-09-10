@@ -3,6 +3,7 @@ varying vec4 position;
 uniform double ration;
 
 uniform float volume;
+uniform float maxVolume;
 uniform float sumVolume;
 
 float dot2( in vec2 v ) { return dot(v,v); }
@@ -37,7 +38,7 @@ void main() {
 
     uv.y += 0.5;
 
-    volume /= 100.f;
+    volume /= maxVolume;
     sumVolume /= 1000.f;
     float d;
     #if 1

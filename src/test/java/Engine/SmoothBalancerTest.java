@@ -8,12 +8,13 @@ public class SmoothBalancerTest {
     @Test
     public void check(){
 
-        SmoothBalancer test = new SmoothBalancer();
+        SmoothBalancer test = new SmoothBalancer(5);
         test.addValue(5.f);
         test.addValue(8.f);
         test.addValue(13.f);
         test.addValue(9.f);
         test.addValue(6.f);
         assertEquals(test.getAvg(), 8.2f);
+        assertEquals(test.getMax(), 13.f);
     }
 }

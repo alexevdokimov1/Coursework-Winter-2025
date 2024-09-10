@@ -52,7 +52,5 @@ void main() {
     col *= 1.0 - exp(-6.0*abs(d));
     col = mix( col, vec3(0), 1.0-smoothstep(0.0,0.01,abs(d)) );
 
-    col += hashOld33(uv.xyx+sumVolume*2)/25;
-
     gl_FragColor = vec4(col, 1.f);
 }

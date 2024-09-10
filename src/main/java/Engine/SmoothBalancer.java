@@ -1,8 +1,17 @@
 package Engine;
 
 public class SmoothBalancer {
-    private final int latestVolumesCount = 5;
-    private final float[] latestVolumes = new float[latestVolumesCount];
+    private final int latestVolumesCount;
+    private final float[] latestVolumes;
+
+    public SmoothBalancer(int slots){
+        this.latestVolumesCount = slots;
+        this.latestVolumes = new float[slots];
+    }
+
+    public SmoothBalancer(){
+        this(5);
+    }
 
     public void addValue(float newValue){
         for(int i = latestVolumesCount-1; i>0; i--)
@@ -12,10 +21,13 @@ public class SmoothBalancer {
         latestVolumes[0]=newValue;
     }
 
-    public void printRow(){
+    @Override
+    public String toString() {
+        StringBuilder outString = new StringBuilder();
         for(int i = 0; i<latestVolumesCount; i++)
-            System.out.printf("%.0f\t", latestVolumes[i]);
-        System.out.println();
+            outString.append(String.format("%.0f\t", latestVolumes[i]));
+        outString.append("\n");
+        return outString.toString();
     }
 
     public float getMax(){

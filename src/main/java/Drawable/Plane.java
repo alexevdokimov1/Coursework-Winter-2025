@@ -7,14 +7,17 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Plane extends Drawable {
 
-    public Plane(String fragmentFilepath){
-        shader = new Shader("Plane", fragmentFilepath);
+    public Plane(String vertexFilepath, String fragmentFilepath){
+        shader = new Shader(vertexFilepath, fragmentFilepath);
         shader.compile();
     }
 
+    public Plane(String fragmentFilepath){
+        this("Plane", fragmentFilepath);
+    }
+
     public Plane(){
-        shader = new Shader("Plane", "Shader");
-        shader.compile();
+        this("Shader");
     }
 
     @Override

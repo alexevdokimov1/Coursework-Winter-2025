@@ -18,15 +18,6 @@ float sdHeart( in vec2 p )
                     dot2(p-0.5*max(p.x+p.y,0.0)))) * sign(p.x-p.y);
 }
 
-vec3 hashOld33( vec3 p )
-{
-    p = vec3( dot(p,vec3(127.1,311.7, 74.7)),
-    dot(p,vec3(269.5,183.3,246.1)),
-    dot(p,vec3(113.5,271.9,124.6)));
-
-    return fract(sin(p)*43758.5453123);
-}
-
 float opOnion( in vec2 p, in float r )
 {
     return abs(sdHeart(p)) - r;
@@ -38,7 +29,7 @@ void main() {
 
     uv.y += 0.5;
 
-    volume /= maxVolume;
+    volume /= clamp(maxVolume, 1.f, 100.f);
     sumVolume /= 1000.f;
     float d;
     #if 1

@@ -2,33 +2,33 @@ uniform float uTime;
 varying vec4 position;
 uniform double ration;
 
-uniform vec2 circlePosition = vec2(0,0);
 uniform float volume;
 uniform float maxVolume;
 uniform float sumVolume;
-uniform float circleThickness = 0.02f;
+uniform float maxRadius = 0.5f;
+uniform float circleThickness = 0.1f;
 
-float sdCircle( vec2 p, float r )
+float sdCircle( in vec2 p, in float radius )
 {
-    return length(p) - r;
+    return length(p) - radius;
+}
+
+float opOnion( in vec2 p, in float radius, in float r )
+{
+    return abs(sdCircle(p, radius)) - r;
 }
 
 void main() {
     vec2 uv = position.xy;
     uv.x *= ration;
 
-    volume /= maxVolume;
+    volume /= clamp(maxVolume, 1.f, 100.f);
     sumVolume /= 1000.f;
 
-    float d = sdCircle(uv, volume);
+    float d = opOnion(uv, volume*maxRadius, circleThickness);
 
-    d = abs(d);
+    vec3 col = (d>0.0) ? vec3(0) : vec3(1.0,0.0,0.0);
+    col *= 1.0 - exp(-6.0*abs(d));
 
-    d = smoothstep(0, circleThickness, d);
-
-    vec3 color = 0.5 + 0.5 * cos(sumVolume+uv.xyx+vec3(0,2,4));
-
-    color *= volume;
-
-    gl_FragColor = (vec4(1)-vec4(d)) * vec4(color, 1.f);
+    gl_FragColor = vec4(col, 1.f);
 }

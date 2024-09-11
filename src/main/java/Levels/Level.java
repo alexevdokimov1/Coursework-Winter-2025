@@ -27,8 +27,10 @@ public class Level extends Scene {
             float currentVolume = player.getVolume();
             balancer.addValue(currentVolume);
 
-            ((MusicPlane) each).setVolume(currentVolume);
-            ((MusicPlane) each).setMaxVolume(balancer.getMax());
+            if(each instanceof MusicPlane){
+                ((MusicPlane) each).setVolume(currentVolume);
+                ((MusicPlane) each).setMaxVolume(balancer.getMax());
+            }
         }
 
         if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)

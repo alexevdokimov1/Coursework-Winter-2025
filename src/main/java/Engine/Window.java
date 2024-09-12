@@ -90,10 +90,10 @@ public class Window {
             System.out.println("Resolution set to " + width + "x" + height);
         }
 
-        ration = (double) width /height;
-
         try {
             if(Boolean.parseBoolean(Settings.getProperty("Fullscreen"))) {
+                width = videoMode.width();
+                height = videoMode.height();
                 glfwWindow = glfwCreateWindow(width, height, "Window", glfwGetPrimaryMonitor(), NULL);
                 System.out.println("Fullscreen mode is set");
             }
@@ -106,6 +106,8 @@ public class Window {
             glfwWindow = glfwCreateWindow(width, height, "Window", NULL, NULL);
             System.err.println("No Fullscreen found");
         }
+
+        ration = (double) width /height;
 
         if(glfwWindow == NULL){
             throw new IllegalStateException("Failed to create window");
@@ -125,7 +127,7 @@ public class Window {
         glfwShowWindow(glfwWindow);
         GL.createCapabilities();
 
-        glfwSwapInterval(0);
+        glfwSwapInterval(1);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

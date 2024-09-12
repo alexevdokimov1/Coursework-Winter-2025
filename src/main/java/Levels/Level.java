@@ -14,7 +14,7 @@ public class Level extends Scene {
     private final SmoothBalancer balancer = new SmoothBalancer(100);
 
     public Level(){
-        actors.add(new MusicHeart());
+        actors.add(new MusicCircle());
         player = new MusicPlayer("song.wav");
     }
 

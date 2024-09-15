@@ -20,6 +20,13 @@ public class Window {
 
     private static Window window = null;
 
+    private double ration;
+
+    private int width;
+    private int height;
+
+    private boolean isRunning;
+
     private Window(){
     }
 
@@ -43,17 +50,17 @@ public class Window {
 
         glfwTerminate();
         glfwSetErrorCallback(null).free();
-    }
 
-    private double ration;
+        isRunning = false;
+    }
 
     public double getRation(){
         return ration;
     }
-
     public void setRation(double newRation){
         this.ration = newRation;
     }
+    public boolean isRunning() {return isRunning;}
 
     public void init(){
 
@@ -72,9 +79,6 @@ public class Window {
 
         GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         if(videoMode==null) return;
-
-        int width;
-        int height;
 
         try {
             width = Integer.parseInt(Settings.getProperty("Width"));
@@ -146,6 +150,7 @@ public class Window {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         level = new Level();
+        isRunning = true;
     }
 
     private static Scene level;
@@ -153,7 +158,7 @@ public class Window {
     public void loop(){
 
         float lastTime = Time.getTime();
-        float dt=0;
+        float dt=-1;
 
         while(!glfwWindowShouldClose(glfwWindow)){
 

@@ -7,6 +7,7 @@ uniform float maxVolume;
 uniform float sumVolume;
 uniform float maxRadius = 0.5f;
 uniform float circleThickness = 0.1f;
+uniform int colorTemplate;
 
 vec2 uv = position.xy * vec2(ration, 1.f);
 
@@ -29,9 +30,17 @@ float opOnion( in vec2 p, in float radius, in float r )
 void main() {
     volume /= clamp(maxVolume, 1.f, 100.f);
 
-    float d = opOnion(uv, volume*maxRadius, circleThickness);
+    float d = opOnion(uv, maxRadius, circleThickness);
 
-    vec3 color = 0.5 + 0.5 * cos(uTime+uv.xyx+vec3(0,2,4));
+    vec3 color;
+    switch(colorTemplate){
+        case 0: color = 0.5 + 0.5 * cos(uTime+uv.xyx+vec3(0,2,4));
+        break;
+        case 1: color = vec3(0,0,0.9) + vec3(0,0.7,0.5) * cos(uTime+uv.xyx+vec3(2,1,4));
+        break;
+        default: color = vec3(1);
+        break;
+    }
 
     vec3 col = (d>0.0) ? vec3(0) : color;
     col *= 1.0 - exp(-6.0*abs(d));

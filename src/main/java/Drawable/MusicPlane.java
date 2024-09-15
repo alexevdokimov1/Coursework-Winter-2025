@@ -4,9 +4,15 @@ public class MusicPlane extends Plane{
     private float volume;
     private float sumVolume = 0.f;
     private float maxVolume;
+    private int colorTemplate = 0;
 
     public MusicPlane(String fragmentFilePath){
         super(fragmentFilePath);
+    }
+
+    public MusicPlane(String fragmentFilePath, int colorTemplate){
+        this(fragmentFilePath);
+        this.colorTemplate = colorTemplate;
     }
 
     @Override
@@ -14,6 +20,7 @@ public class MusicPlane extends Plane{
         shader.upload1f("sumVolume", sumVolume);
         shader.upload1f("volume", volume);
         shader.upload1f("maxVolume", maxVolume);
+        shader.upload1i("colorTemplate", colorTemplate);
     }
 
     public void setVolume(float volume) {

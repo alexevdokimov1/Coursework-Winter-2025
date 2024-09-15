@@ -88,6 +88,10 @@ public class Shader {
         beingUsed = false;
     }
 
+    public void upload1i(String varName, int value){
+        glUniform1i(glGetUniformLocation(shaderProgram, varName), value);
+    }
+
     public void upload1f(String varName, float value){
         glUniform1f(glGetUniformLocation(shaderProgram, varName), value);
     }

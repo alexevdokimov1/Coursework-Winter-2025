@@ -11,7 +11,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 public class Level extends Scene {
 
     private final MusicPlayer player;
-    private final SmoothBalancer balancer = new SmoothBalancer(100);
+    private final SmoothBalancer balancer = new SmoothBalancer(5);
 
     public Level(){
         actors.add(new MusicCircle());

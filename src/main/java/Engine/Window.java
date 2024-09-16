@@ -9,6 +9,8 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
+import java.util.Objects;
+
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -20,10 +22,7 @@ public class Window {
 
     private static Window window = null;
 
-    private double ration;
-
-    private int width;
-    private int height;
+    private float ration;
 
     private boolean isRunning;
 
@@ -49,17 +48,15 @@ public class Window {
         glfwDestroyWindow(glfwWindow);
 
         glfwTerminate();
-        glfwSetErrorCallback(null).free();
+        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
 
         isRunning = false;
     }
 
-    public double getRation(){
+    public float getRation(){
         return ration;
     }
-    public void setRation(double newRation){
-        this.ration = newRation;
-    }
+    public void setRation(float newRation){this.ration = newRation;}
     public boolean isRunning() {return isRunning;}
 
     public void init(){
@@ -80,6 +77,8 @@ public class Window {
         GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         if(videoMode==null) return;
 
+        int width;
+        int height;
         try {
             width = Integer.parseInt(Settings.getProperty("Width"));
             height = Integer.parseInt(Settings.getProperty("Height"));
@@ -111,7 +110,7 @@ public class Window {
             System.err.println("No Fullscreen found");
         }
 
-        ration = (double) width /height;
+        ration = (float) width /height;
 
         if(glfwWindow == NULL){
             throw new IllegalStateException("Failed to create window");

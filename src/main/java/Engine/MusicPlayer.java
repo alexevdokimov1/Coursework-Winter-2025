@@ -3,15 +3,12 @@ package Engine;
 import javax.sound.sampled.*;
 import java.io.File;
 
-import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-
 public class MusicPlayer {
 
     private final AudioInputStream audioInputStream;
     private final SourceDataLine line;
     private final byte[] buffer = new byte[1024];
-    private int bytesRead;
+    private int bytesRead = 0;
 
     public MusicPlayer(String filename) {
         try {

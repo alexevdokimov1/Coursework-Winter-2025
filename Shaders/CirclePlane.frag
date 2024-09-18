@@ -1,6 +1,6 @@
 uniform float uTime;
 varying vec4 position;
-uniform double ration;
+uniform float ration;
 
 uniform vec2 circlePosition;
 uniform float circleRadius;

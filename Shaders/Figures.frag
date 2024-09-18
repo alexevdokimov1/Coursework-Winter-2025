@@ -1,6 +1,6 @@
 uniform float uTime;
 varying vec4 position;
-uniform double ration;
+uniform float ration;
 
 float sdEquilateralTriangle( in vec2 p, in float r )
 {

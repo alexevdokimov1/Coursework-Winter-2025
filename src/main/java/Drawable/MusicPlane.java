@@ -31,4 +31,13 @@ public class MusicPlane extends Plane{
     public void setMaxVolume(float volume) {
        this.maxVolume = volume;
     }
+
+    public void setColorTemplate(int number){
+        this.colorTemplate=number;
+    }
+
+    public void switchColorTemplate() {
+        if(colorTemplate<2) colorTemplate++;
+        else colorTemplate=0;
+    }
 }

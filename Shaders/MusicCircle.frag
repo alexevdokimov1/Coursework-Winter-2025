@@ -39,7 +39,7 @@ float opOnion( in vec2 p, in float radius, in float r )
 }
 
 void main() {
-    float d = opOnion(uv, maxRadius, circleThickness);
+    float d = opOnion(uv, volume/maxVolume*maxRadius, circleThickness);
     vec3 color;
 
     if(colorTemplate==0) color = 0.5 + 0.5 * cos(uTime+uv.xyx+vec3(0,2,4));

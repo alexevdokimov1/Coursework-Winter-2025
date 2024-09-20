@@ -21,7 +21,7 @@ public class Plane extends Drawable {
     }
 
     @Override
-    public void draw(){
+    public void draw(float dt){
         shader.use();
         //load basic data
         shader.uploadProjectionMatrix("uProjection");

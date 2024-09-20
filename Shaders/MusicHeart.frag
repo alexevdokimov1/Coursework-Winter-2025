@@ -32,6 +32,7 @@ void main() {
     vec2 uv = position.xy;
     uv.x *= ration;
 
+    uv *= volume/100 * 1.5;
     uv.y += 0.5;
 
     float x = uv.x*20+sumVolume/800.f;

@@ -1,6 +1,7 @@
 package Levels;
 
 import Drawable.*;
+import Engine.Interpolator;
 import Engine.MusicPlayer;
 import Engine.SmoothBalancer;
 import Engine.Window;
@@ -13,6 +14,7 @@ public class Level extends Scene {
 
     private final MusicPlayer player;
     private final SmoothBalancer balancer = new SmoothBalancer(5);
+    private final Interpolator interpolator = new Interpolator();
 
     public Level(){
         actors.add(new MusicHeart());
@@ -22,14 +24,16 @@ public class Level extends Scene {
     @Override
     public void update(float dt) {
 
-        for(Drawable each : actors){
-            each.draw();
+        interpolator.update(dt);
 
-            float currentVolume = player.getVolume();
-            balancer.addValue(currentVolume);
+        for(Drawable each : actors){
+            each.draw(dt);
+
+            float interpolatedVolume = interpolator.interpolate(player.getBassVolume());
+            balancer.addValue(interpolatedVolume);
 
             if(each instanceof MusicPlane){
-                ((MusicPlane) each).setVolume(currentVolume);
+                ((MusicPlane) each).setVolume(interpolatedVolume);
                 ((MusicPlane) each).setMaxVolume(balancer.getMax());
             }
         }

@@ -28,6 +28,7 @@ public class Plane extends Drawable {
         shader.uploadViewMatrix("uView");
         shader.upload1f("uTime", Time.getTime());
         shader.upload1f("ration", Window.get().getRation());
+        shader.upload1f("dt", dt);
         sendShaderData();
         drawPlane();
         shader.detach();

@@ -5,6 +5,7 @@
 uniform float uTime;
 varying vec4 position;
 uniform float ration;
+uniform float dt;
 
 uniform float volume;
 uniform float maxVolume;

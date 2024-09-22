@@ -3,7 +3,7 @@
     precision mediump float;
 #endif
 uniform float uTime;
-varying vec4 position;
+in vec4 position;
 uniform float ration;
 uniform float dt;
 
@@ -11,6 +11,8 @@ uniform float volume;
 uniform float maxVolume;
 uniform float sumVolume;
 uniform int colorTemplate;
+
+out vec4 outColor;
 
 const float maxRadius = 0.5f;
 const float circleThickness = 0.1f;
@@ -24,7 +26,7 @@ float radialSin(in float x, in float height, in float up){
 }
 
 float modValue(in float x, in float height, in float up){
-    return mod(x, height)+up;
+    return abs(mod(x, height)-height/2)+up;
 }
 
 float sdCircle( in vec2 p, in float radius )
@@ -36,11 +38,11 @@ float opOnion( in vec2 p, in float radius, in float r )
 {
     float x = p.x*20+sumVolume/800.f;
     float volumeValue = pow(volume/100, 2.0);
-    return abs(sdCircle(p, radius)) - r*radialSin(x, volumeValue, 1.f)*modValue(x, volumeValue, 1.f);
+    return abs(sdCircle(p, radius)) - r*radialSin(x, volumeValue*2, 0.7f)*modValue(x, volumeValue, 1.f);
 }
 
 void main() {
-    float d = opOnion(uv, volume/maxVolume*maxRadius, circleThickness);
+    float d = opOnion(uv, maxRadius, circleThickness);
     vec3 color;
 
     if(colorTemplate==0) color = 0.5 + 0.5 * cos(uTime+uv.xyx+vec3(0,2,4));
@@ -50,5 +52,5 @@ void main() {
     vec3 col = (d>0.0) ? vec3(0) : color;
     col *= 1.0 - exp(-6.0*abs(d));
 
-    gl_FragColor = vec4(col, 1.f);
+    outColor = vec4(col, 1.f);
 }

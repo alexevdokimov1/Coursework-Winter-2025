@@ -3,13 +3,15 @@
     precision mediump float;
 #endif
 uniform float uTime;
-varying vec4 position;
+in vec4 position;
 uniform float ration;
 uniform float dt;
 
 uniform float volume;
 uniform float maxVolume;
 uniform float sumVolume;
+
+out vec4 outColor;
 
 float dot2( in vec2 v ) { return dot(v,v); }
 
@@ -33,10 +35,10 @@ void main() {
     vec2 uv = position.xy;
     uv.x *= ration;
 
-    uv *= volume/100 * 1.5;
+    uv /= volume/100 * 1.7;
     uv.y += 0.5;
 
-    float x = uv.x*20+sumVolume/800.f;
+    float x = uv.x*20+sumVolume/1000.f;
     float volumeValue = pow(volume/100, 2.0);
     float d = sdHeart(uv)*radialSin(x, volumeValue, 1.f);
 
@@ -45,5 +47,5 @@ void main() {
     col *= 1.0 - exp(-6.0*abs(d));
     col = mix( col, vec3(0.1, 0.1, 0.1)*smoothstep(0.f, 5.f, volume), 1.0-smoothstep(0.0,0.01,abs(d)*radialSin(x, volumeValue, 1.f)) );
 
-    gl_FragColor = vec4(col, 1.f);
+    outColor = vec4(col, 1.f);
 }

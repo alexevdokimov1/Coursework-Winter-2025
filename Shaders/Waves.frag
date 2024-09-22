@@ -1,5 +1,7 @@
+#version 330
+
 uniform float uTime;
-varying vec4 position;
+in vec4 position;
 uniform float ration;
 
 uniform float lineWidth;
@@ -12,6 +14,8 @@ precision mediump float;
 #endif
 
 #define PI 3.1415926535897932384626433832795
+
+out vec4 outColor;
 
 float plot(vec2 uv, float func){
     if(soft)
@@ -69,5 +73,5 @@ void main() {
     color += pct1*lineColor;
     color += pct2 *vec3(1,0,0);
 
-    gl_FragColor = vec4(color,smoothstep(0.5,1.f,pct1+pct2));
+    outColor = vec4(color,smoothstep(0.5,1.f,pct1+pct2));
 }

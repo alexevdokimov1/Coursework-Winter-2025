@@ -3,8 +3,10 @@
     precision mediump float;
 #endif
 uniform float uTime;
-varying vec4 position;
+in vec4 position;
 uniform float ration;
+
+out vec4 outColor;
 
 float sdArc( in vec2 p, in vec2 sc, in float ra, float rb )
 {
@@ -27,10 +29,10 @@ void main() {
         float d = sdArc(uv,sc, 0.7, 0.1);
 
         // coloring
-        vec3 col = (d>0.0) ? vec3(0.9,0.6,0.3) : vec3(0.65,0.85,1.0);
-    	col *= 1.0 - exp(-8.0*abs(d));
+        vec3 col = (d>0.0) ? vec3(0) : vec3(1.0,0,0);
+    	//col *= 1.0 - exp(-8.0*abs(d));
     	//col *= 0.8 + 0.2*cos(128.0*abs(d));
-    	col = mix( col, vec3(1.0), 1.0-smoothstep(0.0,0.015,abs(d)) );
+    	col = mix( col, vec3(0.9, 0.5, 0.5), 1.0-smoothstep(0.0,0.015,abs(d)) );
 
-    	gl_FragColor = vec4(col, 1.0);
+    	outColor = vec4(col, 1.0);
 }

@@ -15,6 +15,10 @@ public class MusicPlane extends Plane{
         this.colorTemplate = colorTemplate;
     }
 
+    public MusicPlane(){
+        this("Shader");
+    }
+
     @Override
     protected void sendShaderData(){
         shader.upload1f("sumVolume", sumVolume);

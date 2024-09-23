@@ -17,7 +17,7 @@ public class Level extends Scene {
     private final Interpolator interpolator = new Interpolator();
 
     public Level(){
-        actors.add(new MusicHeart());
+        actors.add(new MusicCircle());
         player = new MusicPlayer("song.wav");
     }
 
@@ -29,7 +29,7 @@ public class Level extends Scene {
         for(Drawable each : actors){
             each.draw(dt);
 
-            float interpolatedVolume = interpolator.interpolate(player.getBassVolume());
+            float interpolatedVolume = interpolator.interpolate(player.getVolume());
             balancer.addValue(interpolatedVolume);
 
             if(each instanceof MusicPlane){

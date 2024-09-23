@@ -1,5 +1,7 @@
 #version 330
-
+#ifdef GL_ES
+    precision mediump float;
+#endif
 uniform float uTime;
 in vec4 position;
 uniform float ration;
@@ -7,14 +9,18 @@ uniform float ration;
 uniform vec2 circlePosition;
 uniform float circleRadius;
 uniform float circleThickness;
-uniform bool soft;
 uniform bool hollow;
 
 out vec4 outColor;
 
-float sdCircle( vec2 p, float r )
+float sdCircle( in vec2 p, in float r )
 {
     return length(p) - r;
+}
+
+float opOnion( in vec2 p, in float radius, in float thickness )
+{
+    return abs(sdCircle(p, radius)) - thickness;
 }
 
 void main() {
@@ -22,13 +28,9 @@ void main() {
     uv += circlePosition;
     uv.x *= ration;
     float d = sdCircle(uv, circleRadius);
-    if(hollow)
-        d = abs(d);
+    if (hollow) d = opOnion( uv, circleRadius, circleThickness );
 
-    if(soft)
-        d = smoothstep(0, circleThickness, d);
-    else
-        d = step(circleThickness, d);
+     d = step(circleThickness, d);
 
-    outColor = (vec4(1)-vec4(d)*1/circleThickness);
+    outColor = vec4(1)-vec4(d);
 }

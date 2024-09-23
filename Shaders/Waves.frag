@@ -1,5 +1,7 @@
 #version 330
-
+#ifdef GL_ES
+    precision mediump float;
+#endif
 uniform float uTime;
 in vec4 position;
 uniform float ration;

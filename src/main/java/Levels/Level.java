@@ -3,7 +3,6 @@ package Levels;
 import Drawable.*;
 import Engine.Interpolator;
 import Engine.MusicPlayer;
-import Engine.SmoothBalancer;
 import Engine.Window;
 import Input.KeyListener;
 
@@ -13,7 +12,6 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 public class Level extends Scene {
 
     private final MusicPlayer player;
-    private final SmoothBalancer balancer = new SmoothBalancer(5);
     private final Interpolator interpolator = new Interpolator();
 
     public Level(){
@@ -29,12 +27,10 @@ public class Level extends Scene {
         for(Drawable each : actors){
             each.draw(dt);
 
-            float interpolatedVolume = interpolator.interpolate(player.getVolume());
-            balancer.addValue(interpolatedVolume);
+            float interpolatedVolume = interpolator.interpolate(player.getBass());
 
             if(each instanceof MusicPlane){
                 ((MusicPlane) each).setVolume(interpolatedVolume);
-                ((MusicPlane) each).setMaxVolume(balancer.getMax());
             }
         }
 

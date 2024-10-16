@@ -84,8 +84,10 @@ public class Shader {
     }
 
     public void detach(){
-        glUseProgram(0);
-        beingUsed = false;
+        if(beingUsed){
+            glUseProgram(0);
+            beingUsed = false;
+        }
     }
 
     public void upload1i(String varName, int value){

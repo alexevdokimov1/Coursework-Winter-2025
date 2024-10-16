@@ -3,12 +3,25 @@ package Engine;
 import javax.sound.sampled.*;
 import java.io.File;
 
+import org.apache.commons.math3.transform.DftNormalization;
+import org.apache.commons.math3.transform.FastFourierTransformer;
+import org.apache.commons.math3.transform.TransformType;
+import org.apache.commons.math3.complex.Complex;
+
 public class MusicPlayer {
 
     private final AudioInputStream audioInputStream;
     private final SourceDataLine line;
     private final byte[] buffer = new byte[1024];
     private int bytesRead = 0;
+    private Thread playThread;
+
+    public static final float MIN_BASS_FREQ = 80.0f;      // Adjust as needed
+    public static final float MAX_BASS_FREQ = 300.0f;     // Adjust as needed
+    public static final float MIN_MIDDLE_FREQ = 1000.0f;  // Adjust as needed
+    public static final float MAX_MIDDLE_FREQ = 3000.0f;  // Adjust as needed
+    public static final float MIN_HIGH_FREQ = 5000.0f;    // Adjust as needed
+    public static final float MAX_HIGH_FREQ = 8000.0f;    // Adjust as needed
 
     public MusicPlayer(String filename) {
         try {
@@ -24,7 +37,7 @@ public class MusicPlayer {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        Thread playThread = new Thread(new Runnable() {
+        playThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -40,41 +53,52 @@ public class MusicPlayer {
         playThread.start();
     }
 
-    public float getVolume() {
-        float volume = 0.f;
-        if (bytesRead > 0) {
-            // Calculate the volume as the average of the absolute values of the audio samples
-            float sum = 0;
-            for (int i = 0; i < bytesRead; i += 2) {
-                short sample = (short) ( (buffer[i] & 0xff) | (buffer[i + 1] << 8));
-                sum += Math.abs(sample);
+    public float getBass(){
+        return calculateSpectrumValue(MIN_BASS_FREQ, MAX_BASS_FREQ);
+    }
+
+    public float getMiddle(){
+        return calculateSpectrumValue(MIN_MIDDLE_FREQ, MAX_MIDDLE_FREQ);
+    }
+
+    public float getHigh(){
+        return calculateSpectrumValue(MIN_HIGH_FREQ, MAX_HIGH_FREQ);
+    }
+
+    private float calculateSpectrumValue(float minFreq, float maxFreq) {
+        // Convert byte buffer to double array for FFT
+        int len = bytesRead / 2;
+        double[] samples = new double[len];
+        for (int i = 0; i < len; i++) {
+            samples[i] = (buffer[i * 2] & 0xFF) | ((buffer[i * 2 + 1] << 8) & 0xFF);
+            samples[i] = samples[i] / 32768.0;
+        }
+
+        // Perform unnormalized FFT
+        FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
+        Complex[] fftResult = transformer.transform(samples, TransformType.FORWARD);
+
+        // Calculate spectrum volume (mean energy in the range)
+        double sumOfEnergy = 0.0;
+        int numFreqBins = len / 2; // Frequency bins
+        for (int i = 1; i < numFreqBins; i++) {
+            float freq = i * audioInputStream.getFormat().getSampleRate() / numFreqBins;
+            if (freq >= minFreq && freq <= maxFreq) {
+                sumOfEnergy += Math.pow(fftResult[i].getReal(), 2) + Math.pow(fftResult[i].getImaginary(), 2);
             }
-            if(sum!=0) volume = 20 * (float) Math.log10( sum / bytesRead );
-        }
-        return volume;
-    }
-
-    public float getBassVolume(){
-    float bassVolume = 0.f;
-    if (bytesRead > 0) {
-        // Apply a low-pass filter to the audio samples
-        float[] filteredSamples = new float[bytesRead / 2];
-        float filterCoefficient = 0.1f; // Adjust this value to change the filter cutoff frequency
-        float previousSample = 0.f;
-        for (int i = 0; i < bytesRead; i += 2) {
-            short sample = (short) ((buffer[i] & 0xff) | (buffer[i + 1] << 8));
-            float filteredSample = previousSample + filterCoefficient * (sample - previousSample);
-            filteredSamples[i / 2] = filteredSample;
-            previousSample = filteredSample;
         }
 
-        // Calculate the bass volume as the average of the absolute values of the filtered samples
-        float sum = 0;
-        for (float sample : filteredSamples) {
-            sum += Math.abs(sample);
-        }
-        if (sum != 0) bassVolume = 20 * (float) Math.log10(sum / filteredSamples.length);
-    }
-    return bassVolume;
+        // Convert to decibels (optional)
+        double meanEnergy = sumOfEnergy / numFreqBins;
+        double spectrumVolume = 10 * Math.log10(meanEnergy);
+
+        // Normalize spectrum volume from -∞ to 0 dB to range [0, 1]
+        double minDB = -150.0;  // Adjust this value based on your requirements
+        double maxDB = 0.0;     // Adjust this value based on your requirements
+
+        if (spectrumVolume < minDB) spectrumVolume = minDB;
+        if (spectrumVolume > maxDB) spectrumVolume = maxDB;
+
+        return (float) ((spectrumVolume - minDB) / (maxDB - minDB));
     }
 }

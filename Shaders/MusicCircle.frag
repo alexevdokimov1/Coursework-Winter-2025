@@ -8,7 +8,6 @@ uniform float ration;
 uniform float dt;
 
 uniform float volume;
-uniform float maxVolume;
 uniform float sumVolume;
 uniform int colorTemplate;
 
@@ -36,8 +35,8 @@ float sdCircle( in vec2 p, in float radius )
 
 float opOnion( in vec2 p, in float radius, in float r )
 {
-    float x = p.x*20+sumVolume/800.f;
-    float volumeValue = pow(volume/100, 2.0);
+    float x = p.x*20;
+    float volumeValue = pow(volume, 2.0);
     return abs(sdCircle(p, radius)) - r*radialSin(x, volumeValue*2, 0.7f)*modValue(x, volumeValue, 1.f);
 }
 
@@ -52,5 +51,5 @@ void main() {
     vec3 col = (d>0.0) ? vec3(0) : color;
     col *= 1.0 - exp(-6.0*abs(d));
 
-    outColor = vec4(col, 1.f);
+    outColor = vec4(col, (d<=0.0));
 }

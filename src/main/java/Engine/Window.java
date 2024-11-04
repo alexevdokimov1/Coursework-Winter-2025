@@ -74,6 +74,13 @@ public class Window {
         glfwWindowHint(GLFW_STENCIL_BITS, 4);
         glfwWindowHint(GLFW_SAMPLES, 4);
 
+        try {
+            boolean borderless = Boolean.parseBoolean(Settings.getProperty("Borderless"));
+            glfwWindowHint(GLFW_DECORATED, borderless? GLFW_FALSE : GLFW_TRUE);
+        } catch (Exception e) {
+            glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+        }
+
         GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         if(videoMode==null) return;
 
@@ -116,13 +123,14 @@ public class Window {
             throw new IllegalStateException("Failed to create window");
         }
 
+        glfwRequestWindowAttention(glfwWindow);
+
         GLFWErrorCallback.createPrint(System.err).set();
         glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
         glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
         glfwSetWindowSizeCallback(glfwWindow, SizeListener::resizeCallback);
-
         glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
         glfwMakeContextCurrent(glfwWindow);

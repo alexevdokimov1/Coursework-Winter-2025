@@ -1,9 +1,9 @@
 package Drawable;
 
 public class MusicPlane extends Plane{
-    private float volume;
-    private float sumVolume = 0.f;
-    private float maxVolume;
+    private float bassFrVolume;
+    private float middleFrVolume;
+    private float highFrVolume;
     private int colorTemplate = 0;
 
     public MusicPlane(String fragmentFilePath){
@@ -16,32 +16,30 @@ public class MusicPlane extends Plane{
     }
 
     public MusicPlane(){
-        this("Shader");
+        this("Default");
     }
 
     @Override
     protected void sendShaderData(){
-        shader.upload1f("sumVolume", sumVolume);
-        shader.upload1f("volume", volume);
-        shader.upload1f("maxVolume", maxVolume);
+        shader.upload1f("highFrVolume", highFrVolume);
+        shader.upload1f("middleFrVolume", middleFrVolume);
+        shader.upload1f("bassFrVolume", bassFrVolume);
         shader.upload1i("colorTemplate", colorTemplate);
     }
 
-    public void setVolume(float volume) {
-        this.sumVolume += volume;
-        this.volume = volume;
+    public void setBassVolume(float volume) {
+        this.bassFrVolume = volume;
     }
 
-    public void setMaxVolume(float volume) {
-       this.maxVolume = volume;
+    public void setMiddleVolume(float volume) {
+        this.middleFrVolume = volume;
+    }
+
+    public void setHighVolume(float volume) {
+        this.highFrVolume = volume;
     }
 
     public void setColorTemplate(int number){
         this.colorTemplate=number;
-    }
-
-    public void switchColorTemplate() {
-        if(colorTemplate<2) colorTemplate++;
-        else colorTemplate=0;
     }
 }

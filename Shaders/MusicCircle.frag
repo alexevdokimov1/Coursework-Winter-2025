@@ -7,13 +7,15 @@ in vec4 position;
 uniform float ration;
 uniform float dt;
 
-uniform float volume;
-uniform float sumVolume;
+uniform float bassFrVolume;
+uniform float middleFrVolume;
+uniform float highFrVolume;
+
 uniform int colorTemplate;
 
 out vec4 outColor;
 
-const float maxRadius = 0.5f;
+const float maxRadius = 0.7f;
 const float circleThickness = 0.1f;
 
 vec2 uv = position.xy * vec2(ration, 1.f);
@@ -30,14 +32,14 @@ float modValue(in float x, in float height, in float up){
 
 float sdCircle( in vec2 p, in float radius )
 {
-    return length(p) - radius;
+    return length(p) - radius*pow((0.8+bassFrVolume*0.2),2);
 }
 
 float opOnion( in vec2 p, in float radius, in float r )
 {
     float x = p.x*20;
-    float volumeValue = pow(volume, 2.0);
-    return abs(sdCircle(p, radius)) - r*radialSin(x, volumeValue*2, 0.7f)*modValue(x, volumeValue, 1.f);
+    return abs(sdCircle(p, radius)) - r*radialSin(x, pow(bassFrVolume, 2.0)*2, 0.7f)*
+    modValue(x+uTime, pow(highFrVolume,2), 1.f);
 }
 
 void main() {

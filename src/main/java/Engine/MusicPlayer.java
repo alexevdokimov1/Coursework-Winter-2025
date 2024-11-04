@@ -101,4 +101,8 @@ public class MusicPlayer {
 
         return (float) ((spectrumVolume - minDB) / (maxDB - minDB));
     }
+
+    public void start() {
+        playThread.start();
+    }
 }

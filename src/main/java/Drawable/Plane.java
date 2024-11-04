@@ -13,11 +13,11 @@ public class Plane extends Drawable {
     }
 
     public Plane(String fragmentFilepath){
-        this("Plane", fragmentFilepath);
+        this("Default", fragmentFilepath);
     }
 
     public Plane(){
-        this("Shader");
+        this("Default");
     }
 
     @Override

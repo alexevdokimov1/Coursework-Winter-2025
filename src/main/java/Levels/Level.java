@@ -4,7 +4,6 @@ import Drawable.*;
 import Engine.Interpolator;
 import Engine.MusicPlayer;
 import Engine.Window;
-import Input.KeyListener;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
@@ -12,41 +11,38 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 public class Level extends Scene {
 
     private final MusicPlayer player;
-    private final Interpolator interpolator = new Interpolator();
+    private final Interpolator bassInterpolator = new Interpolator();
+    private final Interpolator middleInterpolator = new Interpolator();
+    private final Interpolator highInterpolator = new Interpolator();
 
     public Level(){
         actors.add(new MusicCircle());
         player = new MusicPlayer("song.wav");
+        player.start();
     }
 
     @Override
     public void update(float dt) {
 
-        interpolator.update(dt);
+        bassInterpolator.update(dt);
+        middleInterpolator.update(dt);
+        highInterpolator.update(dt);
 
         for(Drawable each : actors){
             each.draw(dt);
 
-            float interpolatedVolume = interpolator.interpolate(player.getBass());
+            float interpolatedBassVolume = bassInterpolator.interpolate(player.getBass());
+            float interpolatedMiddleVolume = middleInterpolator.interpolate(player.getMiddle());
+            float interpolatedHighVolume = highInterpolator.interpolate(player.getHigh());
 
             if(each instanceof MusicPlane){
-                ((MusicPlane) each).setVolume(interpolatedVolume);
+                ((MusicPlane) each).setBassVolume(interpolatedBassVolume);
+                ((MusicPlane) each).setMiddleVolume(interpolatedMiddleVolume);
+                ((MusicPlane) each).setHighVolume(interpolatedHighVolume);
             }
         }
 
         if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(Window.get().getWindow(), true);
-
-        for(Drawable each : actors){
-            if(each instanceof MusicPlane){
-                if (KeyListener.isKeyPressed(GLFW_KEY_1)) {
-                    ((MusicPlane) each).setColorTemplate(0);
-                }
-                else if(KeyListener.isKeyPressed(GLFW_KEY_2)) {
-                    ((MusicPlane) each).setColorTemplate(1);
-                }
-            }
-        }
-
     }
 }

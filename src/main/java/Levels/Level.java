@@ -18,7 +18,6 @@ public class Level extends Scene {
     public Level(){
         actors.add(new MusicCircle());
         player = new MusicPlayer("song.wav");
-        player.start();
     }
 
     @Override
@@ -44,5 +43,20 @@ public class Level extends Scene {
 
         if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(Window.get().getWindow(), true);
+
+        if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_1) == GLFW_PRESS)
+            player.pause();
+
+        if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_2) == GLFW_PRESS)
+            player.resume();
+
+        if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_4) == GLFW_PRESS)
+            player.openFile("song_1.wav");
+
+        if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_UP) == GLFW_PRESS)
+            player.setVolume(player.getVolume()+10);
+
+        if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS)
+            player.setVolume(player.getVolume()-10);
     }
 }

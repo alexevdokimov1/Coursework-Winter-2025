@@ -2,19 +2,22 @@ package Engine;
 
 import javax.sound.sampled.*;
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import ControlPanel.SoundControlInterface;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
 import org.apache.commons.math3.complex.Complex;
 
-public class MusicPlayer {
+public class MusicPlayer implements SoundControlInterface {
 
-    private final AudioInputStream audioInputStream;
-    private final SourceDataLine line;
-    private final byte[] buffer = new byte[1024];
+    private AudioInputStream audioInputStream;
+    private SourceDataLine line;
+    private byte[] buffer = new byte[1024];
     private int bytesRead = 0;
     private Thread playThread;
+    private AtomicBoolean isPaused = new AtomicBoolean(false);
 
     public static final float MIN_BASS_FREQ = 80.0f;      // Adjust as needed
     public static final float MAX_BASS_FREQ = 300.0f;     // Adjust as needed
@@ -24,25 +27,14 @@ public class MusicPlayer {
     public static final float MAX_HIGH_FREQ = 8000.0f;    // Adjust as needed
 
     public MusicPlayer(String filename) {
-        try {
-        // Create an AudioInputStream from the file
-        audioInputStream = AudioSystem.getAudioInputStream(new File(filename).getAbsoluteFile());
-
-        // Play the audio
-        DataLine.Info info = new DataLine.Info(SourceDataLine.class,
-                audioInputStream.getFormat());
-        line = (SourceDataLine) AudioSystem.getLine(info);
-        line.open(audioInputStream.getFormat());
-        line.start();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        openFile(filename);
         playThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    while (-1 != (bytesRead = audioInputStream.read(buffer, 0, buffer.length))
+                    while (-1 != (bytesRead = audioInputStream.read(buffer, 0, buffer.length) )
                             && Window.get().isRunning()) {
+                        while(isPaused.get());
                         line.write(buffer, 0, bytesRead);
                     }
                 } catch (Exception e) {
@@ -66,6 +58,7 @@ public class MusicPlayer {
     }
 
     private float calculateSpectrumValue(float minFreq, float maxFreq) {
+        if(isPaused.get()) return 0.1f;
         // Convert byte buffer to double array for FFT
         int len = bytesRead / 2;
         double[] samples = new double[len];
@@ -102,7 +95,55 @@ public class MusicPlayer {
         return (float) ((spectrumVolume - minDB) / (maxDB - minDB));
     }
 
-    public void start() {
-        playThread.start();
+    @Override
+    public void pause() {
+        isPaused.set(true);
+    }
+
+    @Override
+    public void resume() {
+        isPaused.set(false);
+        synchronized (this) {
+            notifyAll();
+        }
+    }
+
+    @Override
+    public void stop() {
+        playThread.interrupt();
+    }
+
+    public boolean isPaused(){
+        return this.isPaused.get();
+    }
+
+    public void openFile(String filename){
+        try {
+            audioInputStream = AudioSystem.getAudioInputStream(new File(filename).getAbsoluteFile());
+            // Play the audio
+            DataLine.Info info = new DataLine.Info(SourceDataLine.class,
+                    audioInputStream.getFormat());
+            line = (SourceDataLine) AudioSystem.getLine(info);
+            line.open(audioInputStream.getFormat());
+            line.start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        resume();
+    }
+
+    private float volume = 100;
+
+    @Override
+    public void setVolume(float value) {
+        this.volume = Math.clamp(value, 0, 100);
+
+        final FloatControl volumeControl = (FloatControl) line.getControl( FloatControl.Type.MASTER_GAIN );
+        volumeControl.setValue( 20.0f * (float) Math.log10( this.volume / 100.0 ) );
+    }
+
+    @Override
+    public float getVolume() {
+        return this.volume;
     }
 }

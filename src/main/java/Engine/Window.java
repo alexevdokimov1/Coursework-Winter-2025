@@ -180,7 +180,7 @@ public class Window {
         float lastTime = Time.getTime();
         float dt=-1;
 
-        while(!glfwWindowShouldClose(glfwWindow)){
+        while(!glfwWindowShouldClose(glfwWindow) || !Window.window.isRunning()) {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

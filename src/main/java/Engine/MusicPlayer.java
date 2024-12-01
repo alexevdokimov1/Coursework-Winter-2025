@@ -14,35 +14,34 @@ public class MusicPlayer implements SoundControlInterface {
 
     private AudioInputStream audioInputStream;
     private SourceDataLine line;
-    private byte[] buffer = new byte[1024];
+    private final byte[] buffer = new byte[1024];
     private int bytesRead = 0;
-    private Thread playThread;
-    private AtomicBoolean isPaused = new AtomicBoolean(false);
+    private final AtomicBoolean isPaused = new AtomicBoolean(false);
+    private File file;
+    private float volume = 100;
 
-    public static final float MIN_BASS_FREQ = 80.0f;      // Adjust as needed
-    public static final float MAX_BASS_FREQ = 300.0f;     // Adjust as needed
-    public static final float MIN_MIDDLE_FREQ = 1000.0f;  // Adjust as needed
-    public static final float MAX_MIDDLE_FREQ = 3000.0f;  // Adjust as needed
-    public static final float MIN_HIGH_FREQ = 5000.0f;    // Adjust as needed
-    public static final float MAX_HIGH_FREQ = 8000.0f;    // Adjust as needed
+    public static final float MIN_BASS_FREQ = 80.0f;
+    public static final float MAX_BASS_FREQ = 300.0f;
+    public static final float MIN_MIDDLE_FREQ = 1000.0f;
+    public static final float MAX_MIDDLE_FREQ = 3000.0f;
+    public static final float MIN_HIGH_FREQ = 5000.0f;
+    public static final float MAX_HIGH_FREQ = 8000.0f;
 
-    public MusicPlayer(String filename) {
+    public MusicPlayer(String filename){
         openFile(filename);
-        playThread = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    while (-1 != (bytesRead = audioInputStream.read(buffer, 0, buffer.length) )
-                            && Window.get().isRunning()) {
-                        while(isPaused.get());
+                    while (Window.get().isRunning()) {
+                        while(isPaused.get() || -1 == (bytesRead = audioInputStream.read(buffer, 0, buffer.length) ));
                         line.write(buffer, 0, bytesRead);
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
-        });
-        playThread.start();
+        }).start();
     }
 
     public float getBass(){
@@ -58,8 +57,9 @@ public class MusicPlayer implements SoundControlInterface {
     }
 
     private float calculateSpectrumValue(float minFreq, float maxFreq) {
-        if(isPaused.get()) return 0.1f;
-        // Convert byte buffer to double array for FFT
+
+        if(isPaused.get() || bytesRead <= 0) return 0.1f;
+
         int len = bytesRead / 2;
         double[] samples = new double[len];
         for (int i = 0; i < len; i++) {
@@ -67,11 +67,9 @@ public class MusicPlayer implements SoundControlInterface {
             samples[i] = samples[i] / 32768.0;
         }
 
-        // Perform unnormalized FFT
         FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
         Complex[] fftResult = transformer.transform(samples, TransformType.FORWARD);
 
-        // Calculate spectrum volume (mean energy in the range)
         double sumOfEnergy = 0.0;
         int numFreqBins = len / 2; // Frequency bins
         for (int i = 1; i < numFreqBins; i++) {
@@ -81,13 +79,11 @@ public class MusicPlayer implements SoundControlInterface {
             }
         }
 
-        // Convert to decibels (optional)
         double meanEnergy = sumOfEnergy / numFreqBins;
         double spectrumVolume = 10 * Math.log10(meanEnergy);
 
-        // Normalize spectrum volume from -∞ to 0 dB to range [0, 1]
-        double minDB = -150.0;  // Adjust this value based on your requirements
-        double maxDB = 0.0;     // Adjust this value based on your requirements
+        double minDB = -150.0;
+        double maxDB = 0.0;
 
         if (spectrumVolume < minDB) spectrumVolume = minDB;
         if (spectrumVolume > maxDB) spectrumVolume = maxDB;
@@ -109,35 +105,30 @@ public class MusicPlayer implements SoundControlInterface {
     }
 
     @Override
-    public void stop() {
-        playThread.interrupt();
-    }
-
     public boolean isPaused(){
         return this.isPaused.get();
     }
 
     public void openFile(String filename){
         try {
-            audioInputStream = AudioSystem.getAudioInputStream(new File(filename).getAbsoluteFile());
+            file = new File(filename);
+            audioInputStream = AudioSystem.getAudioInputStream(file.getAbsoluteFile());
             // Play the audio
-            DataLine.Info info = new DataLine.Info(SourceDataLine.class,
-                    audioInputStream.getFormat());
+            DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioInputStream.getFormat());
             line = (SourceDataLine) AudioSystem.getLine(info);
             line.open(audioInputStream.getFormat());
             line.start();
+
+            ((FloatControl)line.getControl( FloatControl.Type.MASTER_GAIN )).setValue( 20.0f * (float) Math.log10( this.volume / 100.0 ) );
         } catch (Exception e) {
-            throw new RuntimeException(e);
+           System.out.println(e);
         }
         resume();
     }
 
-    private float volume = 100;
-
     @Override
     public void setVolume(float value) {
         this.volume = Math.clamp(value, 0, 100);
-
         final FloatControl volumeControl = (FloatControl) line.getControl( FloatControl.Type.MASTER_GAIN );
         volumeControl.setValue( 20.0f * (float) Math.log10( this.volume / 100.0 ) );
     }
@@ -145,5 +136,23 @@ public class MusicPlayer implements SoundControlInterface {
     @Override
     public float getVolume() {
         return this.volume;
+    }
+
+    @Override
+    public float getPlaybackPosition(){
+        return (float) (line.getMicrosecondPosition()*1e-6);
+    }
+
+    @Override
+    public float getDuration(){
+        AudioFormat format = audioInputStream.getFormat();
+        long audioFileLength = file.length();
+        int frameSize = format.getFrameSize();
+        float frameRate = format.getFrameRate();
+        return ((audioFileLength / (frameSize * frameRate)));
+    }
+
+    public float getDurationAlpha(){
+        return getPlaybackPosition()/getDuration();
     }
 }

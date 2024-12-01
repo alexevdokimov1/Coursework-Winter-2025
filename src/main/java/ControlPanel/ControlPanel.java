@@ -1,7 +1,5 @@
 package ControlPanel;
 
-import javax.swing.*;
+public class ControlPanel {
 
-public class ControlPanel extends JFrame{
-    
 }

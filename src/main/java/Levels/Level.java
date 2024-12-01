@@ -5,6 +5,7 @@ import Engine.Interpolator;
 import Engine.MusicPlayer;
 import Engine.Window;
 
+import static Input.KeyListener.isKeyPressed;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
@@ -41,22 +42,26 @@ public class Level extends Scene {
             }
         }
 
-        if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        if (isKeyPressed(GLFW_KEY_ESCAPE))
             glfwSetWindowShouldClose(Window.get().getWindow(), true);
 
-        if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_1) == GLFW_PRESS)
+        if (isKeyPressed(GLFW_KEY_1))
             player.pause();
 
-        if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_2) == GLFW_PRESS)
+        if (isKeyPressed(GLFW_KEY_2))
             player.resume();
 
-        if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_4) == GLFW_PRESS)
-            player.openFile("song_1.wav");
+        if (isKeyPressed(GLFW_KEY_3)) {
+            System.out.printf("Playback Position: %f\n", player.getDurationAlpha());
+        }
 
-        if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_UP) == GLFW_PRESS)
-            player.setVolume(player.getVolume()+10);
+        if (isKeyPressed(GLFW_KEY_4))
+            player.openFile("song2.wav");
 
-        if (glfwGetKey(Window.get().getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS)
-            player.setVolume(player.getVolume()-10);
+        if (isKeyPressed(GLFW_KEY_UP))
+            player.setVolume(player.getVolume()+1);
+
+        if (isKeyPressed(GLFW_KEY_DOWN))
+            player.setVolume(player.getVolume()-1);
     }
 }

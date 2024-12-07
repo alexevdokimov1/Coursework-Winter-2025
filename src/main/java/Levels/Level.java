@@ -1,13 +1,10 @@
 package Levels;
 
 import Drawable.*;
-import Engine.Interpolator;
-import Engine.MusicPlayer;
-import Engine.Window;
+import Engine.*;
 
 import static Input.KeyListener.isKeyPressed;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
 public class Level extends Scene {
 
@@ -18,7 +15,8 @@ public class Level extends Scene {
 
     public Level(){
         actors.add(new MusicCircle());
-        player = new MusicPlayer("song.wav");
+        player = new MusicPlayer();
+        player.openFile("song.wav");
     }
 
     @Override
@@ -45,22 +43,20 @@ public class Level extends Scene {
         if (isKeyPressed(GLFW_KEY_ESCAPE))
             glfwSetWindowShouldClose(Window.get().getWindow(), true);
 
-        if (isKeyPressed(GLFW_KEY_1))
-            player.pause();
+        if (isKeyPressed(GLFW_KEY_SPACE))
+            if(player.isPaused()) player.resume();
+            else player.pause();
 
         if (isKeyPressed(GLFW_KEY_2))
-            player.resume();
-
-        if (isKeyPressed(GLFW_KEY_3)) {
-            System.out.printf("Playback Position: %f\n", player.getDurationAlpha());
-        }
+            System.out.printf("Playback Position: %02d:%02d\n", (int)player.getPlaybackPosition()/60,
+                    (int)player.getPlaybackPosition()%60);
 
         if (isKeyPressed(GLFW_KEY_4))
             player.openFile("song2.wav");
 
         if (isKeyPressed(GLFW_KEY_UP))
             player.setVolume(player.getVolume()+1);
-
+        
         if (isKeyPressed(GLFW_KEY_DOWN))
             player.setVolume(player.getVolume()-1);
     }

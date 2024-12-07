@@ -37,7 +37,7 @@ float sdCircle( in vec2 p, in float radius )
 
 float opOnion( in vec2 p, in float radius, in float r )
 {
-    float x = p.x*20;
+    float x = p.x*200;
     return abs(sdCircle(p, radius)) - r*radialSin(x, pow(bassFrVolume, 2.0)*2, 0.7f)*
     modValue(x+uTime, pow(highFrVolume,2), 1.f);
 }

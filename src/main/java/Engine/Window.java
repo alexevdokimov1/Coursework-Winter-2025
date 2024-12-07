@@ -169,8 +169,9 @@ public class Window {
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-        level = new Level();
         isRunning = true;
+
+        level = new Level();
     }
 
     private static Scene level;

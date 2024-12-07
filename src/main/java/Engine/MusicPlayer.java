@@ -2,6 +2,7 @@ package Engine;
 
 import javax.sound.sampled.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import ControlPanel.SoundControlInterface;
@@ -16,32 +17,38 @@ public class MusicPlayer implements SoundControlInterface {
     private SourceDataLine line;
     private final byte[] buffer = new byte[1024];
     private int bytesRead = 0;
-    private final AtomicBoolean isPaused = new AtomicBoolean(false);
+    private final AtomicBoolean isPaused = new AtomicBoolean(true);
     private File file;
     private float volume = 100;
+    private final Thread playThread;
 
-    public static final float MIN_BASS_FREQ = 80.0f;
-    public static final float MAX_BASS_FREQ = 300.0f;
-    public static final float MIN_MIDDLE_FREQ = 1000.0f;
-    public static final float MAX_MIDDLE_FREQ = 3000.0f;
-    public static final float MIN_HIGH_FREQ = 5000.0f;
-    public static final float MAX_HIGH_FREQ = 8000.0f;
+    private static final float MIN_BASS_FREQ = 80.0f;
+    private static final float MAX_BASS_FREQ = 300.0f;
+    private static final float MIN_MIDDLE_FREQ = 1000.0f;
+    private static final float MAX_MIDDLE_FREQ = 3000.0f;
+    private static final float MIN_HIGH_FREQ = 5000.0f;
+    private static final float MAX_HIGH_FREQ = 8000.0f;
 
-    public MusicPlayer(String filename){
-        openFile(filename);
-        new Thread(new Runnable() {
+    public MusicPlayer(){
+        playThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     while (Window.get().isRunning()) {
-                        while(isPaused.get() || -1 == (bytesRead = audioInputStream.read(buffer, 0, buffer.length) ));
-                        line.write(buffer, 0, bytesRead);
+                        synchronized (this){
+                            if(audioInputStream != null && line != null) {
+                                if (!isPaused.get() && -1 != (bytesRead = audioInputStream.read(buffer, 0, buffer.length))) {
+                                    line.write(buffer, 0, bytesRead);
+                                }
+                            }
+                        }
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
-        }).start();
+        });
+        playThread.start();
     }
 
     public float getBass(){
@@ -109,21 +116,27 @@ public class MusicPlayer implements SoundControlInterface {
         return this.isPaused.get();
     }
 
+    @Override
     public void openFile(String filename){
         try {
-            file = new File(filename);
-            audioInputStream = AudioSystem.getAudioInputStream(file.getAbsoluteFile());
-            // Play the audio
-            DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioInputStream.getFormat());
-            line = (SourceDataLine) AudioSystem.getLine(info);
-            line.open(audioInputStream.getFormat());
-            line.start();
-
-            ((FloatControl)line.getControl( FloatControl.Type.MASTER_GAIN )).setValue( 20.0f * (float) Math.log10( this.volume / 100.0 ) );
+            synchronized (playThread) {
+                File tmpFile = new File(filename);
+                if (!tmpFile.exists()) throw new FileNotFoundException();
+                file = tmpFile;
+                audioInputStream = AudioSystem.getAudioInputStream(file.getAbsoluteFile());
+                DataLine.Info info = new DataLine.Info(SourceDataLine.class,
+                        audioInputStream.getFormat());
+                line = (SourceDataLine) AudioSystem.getLine(info);
+                line.open(audioInputStream.getFormat());
+                line.start();
+            }
+            ((FloatControl)line.getControl(
+                    FloatControl.Type.MASTER_GAIN )).setValue
+                    ( 20.0f * (float) Math.log10( this.volume / 100.0 ) );
+            resume();
         } catch (Exception e) {
-           System.out.println(e);
+           System.out.println("Error with file: " + e);
         }
-        resume();
     }
 
     @Override
@@ -140,6 +153,7 @@ public class MusicPlayer implements SoundControlInterface {
 
     @Override
     public float getPlaybackPosition(){
+        if(line==null) return 0;
         return (float) (line.getMicrosecondPosition()*1e-6);
     }
 
@@ -150,9 +164,5 @@ public class MusicPlayer implements SoundControlInterface {
         int frameSize = format.getFrameSize();
         float frameRate = format.getFrameRate();
         return ((audioFileLength / (frameSize * frameRate)));
-    }
-
-    public float getDurationAlpha(){
-        return getPlaybackPosition()/getDuration();
     }
 }

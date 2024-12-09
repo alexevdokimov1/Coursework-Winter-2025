@@ -19,8 +19,10 @@ public class MusicPlayer implements SoundControlInterface {
     private int bytesRead = 0;
     private final AtomicBoolean isPaused = new AtomicBoolean(true);
     private File file;
-    private float volume = 100;
+    private int volume = 50;
     private final Thread playThread;
+    private String filepath;
+    private final AtomicBoolean isPlaying = new AtomicBoolean(false);
 
     private static final float MIN_BASS_FREQ = 80.0f;
     private static final float MAX_BASS_FREQ = 300.0f;
@@ -40,6 +42,7 @@ public class MusicPlayer implements SoundControlInterface {
                                 if (!isPaused.get() && -1 != (bytesRead = audioInputStream.read(buffer, 0, buffer.length))) {
                                     line.write(buffer, 0, bytesRead);
                                 }
+                                isPlaying.set(bytesRead > 0);
                             }
                         }
                     }
@@ -116,12 +119,17 @@ public class MusicPlayer implements SoundControlInterface {
         return this.isPaused.get();
     }
 
+    public boolean isPlaying() {
+        return isPlaying.get();
+    }
+
     @Override
     public void openFile(String filename){
         try {
             synchronized (playThread) {
                 File tmpFile = new File(filename);
                 if (!tmpFile.exists()) throw new FileNotFoundException();
+                this.filepath = filename;
                 file = tmpFile;
                 audioInputStream = AudioSystem.getAudioInputStream(file.getAbsoluteFile());
                 DataLine.Info info = new DataLine.Info(SourceDataLine.class,
@@ -140,7 +148,8 @@ public class MusicPlayer implements SoundControlInterface {
     }
 
     @Override
-    public void setVolume(float value) {
+    public void setVolume(int value) {
+        if(line == null) return;
         this.volume = Math.clamp(value, 0, 100);
         final FloatControl volumeControl = (FloatControl) line.getControl( FloatControl.Type.MASTER_GAIN );
         volumeControl.setValue( 20.0f * (float) Math.log10( this.volume / 100.0 ) );
@@ -151,18 +160,23 @@ public class MusicPlayer implements SoundControlInterface {
         return this.volume;
     }
 
-    @Override
-    public float getPlaybackPosition(){
-        if(line==null) return 0;
-        return (float) (line.getMicrosecondPosition()*1e-6);
+    public String getFilepath() {
+        return filepath;
     }
 
     @Override
-    public float getDuration(){
+    public int getPlaybackPosition() {
+        if(line==null) return 0;
+        return (int)Math.floor(line.getMicrosecondPosition()*1e-6);
+    }
+
+    @Override
+    public int getDuration() {
+        if(audioInputStream == null) return -1;
         AudioFormat format = audioInputStream.getFormat();
         long audioFileLength = file.length();
         int frameSize = format.getFrameSize();
         float frameRate = format.getFrameRate();
-        return ((audioFileLength / (frameSize * frameRate)));
+        return (int) (audioFileLength / (frameSize * frameRate));
     }
 }

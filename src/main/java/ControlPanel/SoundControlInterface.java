@@ -7,11 +7,11 @@ public interface SoundControlInterface {
 
     void openFile(String filename);
 
-    void setVolume(float value);
+    void setVolume(int value);
     float getVolume();
 
     boolean isPaused();
 
-    float getDuration();
-    float getPlaybackPosition();
+    int getDuration();
+    int getPlaybackPosition();
 }

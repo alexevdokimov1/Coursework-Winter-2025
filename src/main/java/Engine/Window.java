@@ -1,10 +1,10 @@
 package Engine;
 
+import ControlPanel.ControlPanel;
 import Input.KeyListener;
 import Input.MouseListener;
 import Input.SizeListener;
 import Levels.Level;
-import Levels.Scene;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -49,6 +49,10 @@ public class Window {
 
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+
+        for(java.awt.Window single : ControlPanel.getWindows()){
+            single.dispose();
+        }
 
         isRunning = false;
     }
@@ -174,7 +178,7 @@ public class Window {
         level = new Level();
     }
 
-    private static Scene level;
+    private static Level level;
 
     public void loop(){
 

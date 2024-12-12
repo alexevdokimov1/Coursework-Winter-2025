@@ -19,6 +19,46 @@ float dot2( in vec2 v ) { return dot(v,v); }
 
 #define PI 3.1415926535897932384626433832795
 
+
+vec2 hash2(vec2 p ) {
+   return fract(sin(vec2(dot(p, vec2(123.4, 748.6)), dot(p, vec2(547.3, 659.3))))*5232.85324);
+}
+float hash(vec2 p) {
+  return fract(sin(dot(p, vec2(43.232, 75.876)))*4526.3257);
+}
+
+float voronoi(vec2 p) {
+    vec2 n = floor(p);
+    vec2 f = fract(p);
+    float md = 5.0;
+    vec2 m = vec2(0.0);
+    for (int i = -1;i<=1;i++) {
+        for (int j = -1;j<=1;j++) {
+            vec2 g = vec2(i, j);
+            vec2 o = hash2(n+g);
+            o = 0.5+0.5*sin(uTime+5.038*o);
+            vec2 r = g + o - f;
+            float d = dot(r, r);
+            if (d<md) {
+              md = d;
+              m = n+g+o;
+            }
+        }
+    }
+    return md;
+}
+
+float ov(vec2 p) {
+    float v = 0.0;
+    float a = 0.4;
+    for (int i = 0;i<3;i++) {
+        v+= voronoi(p)*a;
+        p*=2.0;
+        a*=0.5;
+    }
+    return v;
+}
+
 float radialSin(in float x, in float height, in float up){
     return (sin(x+3*PI/2)+1)*height/2+up;
 }
@@ -59,9 +99,14 @@ void main() {
     }
     else if(colorTemplate == 2 ) {
     vec3 gradient = 0.5 + 0.5 * cos(uTime+uv.xyx+vec3(0,2,4));
-    col = (d>0.0) ? vec3(0) : vec3(0)*pow(bassFrVolume, 1.5f)*2.0;
+    col = (d>0.0) ? vec3(0) : vec3(0);
             col *= 1.0 - exp(-5.0*abs(d));
             col = mix( col, gradient*bassFrVolume, 1.0-smoothstep(0.0,0.1,abs(d)));
+    }
+    else if(colorTemplate == 3 ) {
+        col = (d>0.0) ? vec3(0) : mix(vec3(1,0,0),vec3(0),smoothstep(0,0.5f,ov(uv*5.0)))*pow(bassFrVolume, 1.5f)*2.0;
+                col *= 1.0 - exp(-5.0*abs(d));
+                col = mix( col, vec3(0.1, 0.1, 0.1)*bassFrVolume, 1.0-smoothstep(0.0,0.1,abs(d)));
     }
     else col = (d>0.0) ? vec3(0) : vec3(1);
 

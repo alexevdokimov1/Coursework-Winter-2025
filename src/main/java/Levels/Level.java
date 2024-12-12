@@ -23,7 +23,10 @@ public class Level {
     private final Interpolator highInterpolator = new Interpolator();
 
     public Level(){
+
         actors.add(new MusicCircle());
+        actors.add(new MusicHeart());
+
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -40,7 +43,9 @@ public class Level {
         highInterpolator.update(dt);
 
         for(Drawable each : actors){
-            each.draw(dt);
+
+            if(each instanceof MusicHeart && panel.getDrawableShape()==DrawableShape.HEART) each.draw(dt);
+            if(each instanceof MusicCircle && panel.getDrawableShape()==DrawableShape.CIRCLE) each.draw(dt);
 
             float interpolatedBassVolume = bassInterpolator.interpolate(player.getBass());
             float interpolatedMiddleVolume = middleInterpolator.interpolate(player.getMiddle());
@@ -58,7 +63,5 @@ public class Level {
 
         if (isKeyPressed(GLFW_KEY_ESCAPE))
             glfwSetWindowShouldClose(Window.get().getWindow(), true);
-
-        if(!Window.get().isRunning()) panel.dispose();
     }
 }

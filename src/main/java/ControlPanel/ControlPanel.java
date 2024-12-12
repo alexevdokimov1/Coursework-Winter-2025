@@ -1,7 +1,7 @@
 package ControlPanel;
 
+import Drawable.DrawableShape;
 import Engine.MusicPlayer;
-import Levels.Level;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -17,22 +17,32 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
     private final JButton playPauseButton = new JButton();
     private final JButton openFileButton = new JButton("Open");
 
+    private final JLabel shapeText = new JLabel("Shapes:");
+    private final JButton shapeCircle = new JButton("Circle");
+    private final JButton shapeHeart = new JButton("Heart");
+
+    private final JLabel colorTemplateText = new JLabel("Colors Templates:");
     private final JButton templateDefaultButton = new JButton("Default");
     private final JButton templateType1Button = new JButton("Type 1");
     private final JButton templateType2Button = new JButton("Type 2");
+    private final JButton templateType3Button = new JButton("Type 3");
 
     private final JSlider volumeSlider = new JSlider(0,100);
     private final JProgressBar playbackProgressBar = new JProgressBar(0,100);
     private final JLabel currentPlaybackTime = new JLabel();
     private final JLabel overallTime = new JLabel();
     private final JLabel audioTitle = new JLabel();
-    private final MusicPlayer player;
     private final JFileChooser fc = new JFileChooser();
     private int colorTemplate = 0;
-    private final JLabel colorTemplateText = new JLabel("Colors Templates:");
+    private DrawableShape shape = DrawableShape.CIRCLE;
+    private final MusicPlayer player;
 
     public int getColorTemplate() {
         return colorTemplate;
+    }
+
+    public DrawableShape getDrawableShape() {
+        return shape;
     }
 
     public ControlPanel(MusicPlayer player){
@@ -50,6 +60,12 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
         playPauseButton.setText("Waiting");
         playPauseButton.setEnabled(false);
 
+        shapeCircle.addActionListener(this);
+        shapeCircle.setFocusable(false);
+
+        shapeHeart.addActionListener(this);
+        shapeHeart.setFocusable(false);
+
         templateDefaultButton.addActionListener(this);
         templateDefaultButton.setFocusable(false);
 
@@ -58,6 +74,9 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
 
         templateType2Button.addActionListener(this);
         templateType2Button.setFocusable(false);
+
+        templateType3Button.addActionListener(this);
+        templateType3Button.setFocusable(false);
 
         openFileButton.addActionListener(this);
         openFileButton.setFocusable(false);
@@ -71,7 +90,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
                         System.getProperty("file.separator")+ "Music"));
 
         JPanel controlsPanel = new JPanel();
-        controlsPanel.setLayout(new GridLayout(3, 1));
+        controlsPanel.setLayout(new GridLayout(4, 1));
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -80,12 +99,20 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
         topPanel.add(overallTime);
         controlsPanel.add(topPanel);
 
+        JPanel shapePanel = new JPanel();
+        shapePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        shapePanel.add(shapeText);
+        shapePanel.add(shapeCircle);
+        shapePanel.add(shapeHeart);
+        controlsPanel.add( shapePanel);
+
         JPanel templatePanel = new JPanel();
         templatePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         templatePanel.add(colorTemplateText);
         templatePanel.add(templateDefaultButton);
         templatePanel.add(templateType1Button);
         templatePanel.add(templateType2Button);
+        templatePanel.add(templateType3Button);
         controlsPanel.add(templatePanel);
 
         JPanel middlePanel = new JPanel();
@@ -147,6 +174,18 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
 
         if (e.getSource() == templateType2Button){
             this.colorTemplate = 2;
+        }
+
+        if (e.getSource() == templateType3Button){
+            this.colorTemplate = 3;
+        }
+
+        if (e.getSource() == shapeCircle){
+            shape = DrawableShape.CIRCLE;
+        }
+
+        if (e.getSource() == shapeHeart){
+            shape = DrawableShape.HEART;
         }
     }
 

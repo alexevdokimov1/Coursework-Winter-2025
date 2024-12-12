@@ -1,8 +1,7 @@
 package Engine;
 
 import javax.sound.sampled.*;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import ControlPanel.SoundControlInterface;
@@ -124,13 +123,15 @@ public class MusicPlayer implements SoundControlInterface {
     }
 
     @Override
-    public void openFile(String filename){
+    public boolean openFile(String filename){
         try {
             synchronized (playThread) {
-                File tmpFile = new File(filename);
-                if (!tmpFile.exists()) throw new FileNotFoundException();
+                if (!(new File(filename).exists())) throw new FileNotFoundException();
+                if (!filename.endsWith(".wav")) throw new UnsupportedAudioFileException();
+
                 this.filepath = filename;
-                file = tmpFile;
+                file = new File(filename);
+
                 audioInputStream = AudioSystem.getAudioInputStream(file.getAbsoluteFile());
                 DataLine.Info info = new DataLine.Info(SourceDataLine.class,
                         audioInputStream.getFormat());
@@ -142,8 +143,9 @@ public class MusicPlayer implements SoundControlInterface {
                     FloatControl.Type.MASTER_GAIN )).setValue
                     ( 20.0f * (float) Math.log10( this.volume / 100.0 ) );
             resume();
+            return true;
         } catch (Exception e) {
-           System.out.println("Error with file: " + e);
+           return false;
         }
     }
 
@@ -160,10 +162,6 @@ public class MusicPlayer implements SoundControlInterface {
         return this.volume;
     }
 
-    public String getFilepath() {
-        return filepath;
-    }
-
     @Override
     public int getPlaybackPosition() {
         if(line==null) return 0;
@@ -178,5 +176,14 @@ public class MusicPlayer implements SoundControlInterface {
         int frameSize = format.getFrameSize();
         float frameRate = format.getFrameRate();
         return (int) (audioFileLength / (frameSize * frameRate));
+    }
+
+    public String getFileName(){
+        if(file == null) return "";
+        return file.getName();
+    }
+
+    public String getFilepath(){
+        return filepath;
     }
 }

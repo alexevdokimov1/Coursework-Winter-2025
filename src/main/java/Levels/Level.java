@@ -3,6 +3,7 @@ package Levels;
 import ControlPanel.ControlPanel;
 import Drawable.*;
 import Engine.*;
+import Engine.Window;
 
 import javax.swing.*;
 
@@ -23,8 +24,6 @@ public class Level {
 
     public Level(){
         actors.add(new MusicCircle());
-        player.openFile("song.wav");
-
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -51,6 +50,7 @@ public class Level {
                 ((MusicPlane) each).setBassVolume(interpolatedBassVolume);
                 ((MusicPlane) each).setMiddleVolume(interpolatedMiddleVolume);
                 ((MusicPlane) each).setHighVolume(interpolatedHighVolume);
+                ((MusicPlane) each).setColorTemplate(panel.getColorTemplate());
             }
         }
 

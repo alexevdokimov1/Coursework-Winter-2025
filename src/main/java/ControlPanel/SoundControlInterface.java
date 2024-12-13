@@ -8,7 +8,7 @@ public interface SoundControlInterface {
     boolean openFile(String filename);
 
     void setVolume(int value);
-    float getVolume();
+    int getVolume();
 
     boolean isPaused();
 

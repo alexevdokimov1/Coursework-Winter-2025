@@ -106,7 +106,7 @@ void main() {
     else if(colorTemplate == 3 ) {
         col = (d>0.0) ? vec3(0) : mix(vec3(1,0,0),vec3(0),smoothstep(0,0.5f,ov(uv*5.0)))*pow(bassFrVolume, 1.5f)*2.0;
                 col *= 1.0 - exp(-5.0*abs(d));
-                col = mix( col, vec3(0.1, 0.1, 0.1)*bassFrVolume, 1.0-smoothstep(0.0,0.1,abs(d)));
+                col = mix( col, vec3(0.2, 0.2, 0.2)*bassFrVolume, 1.0-smoothstep(0.0,0.1,abs(d)));
     }
     else col = (d>0.0) ? vec3(0) : vec3(1);
 

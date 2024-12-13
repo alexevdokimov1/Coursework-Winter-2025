@@ -9,10 +9,14 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
+import java.nio.file.FileSystems;
+
 import static javax.swing.JOptionPane.showMessageDialog;
 
-public class ControlPanel extends JFrame implements ActionListener, ChangeListener {
+public class ControlPanel extends JFrame implements ActionListener, ChangeListener, KeyListener {
 
     private final JButton playPauseButton = new JButton();
     private final JButton openFileButton = new JButton("Open");
@@ -55,6 +59,8 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
         float ration = (float) player.getPlaybackPosition() / player.getDuration();
         playbackProgressBar.setValue((int)(ration*100));
 
+        addKeyListener(this);
+
         playPauseButton.addActionListener(this);
         playPauseButton.setFocusable(false);
         playPauseButton.setText("Waiting");
@@ -87,7 +93,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
 
         fc.setCurrentDirectory(new File
                 (System.getProperty("user.home") +
-                        System.getProperty("file.separator")+ "Music"));
+                        FileSystems.getDefault().getSeparator() + "Music"));
 
         JPanel controlsPanel = new JPanel();
         controlsPanel.setLayout(new GridLayout(4, 1));
@@ -221,5 +227,38 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
 
         overallTime.setText(overallTimeString);
         audioTitle.setText(player.getFileName());
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_SPACE){
+            if(player.isPaused()) {
+                player.resume();
+                playPauseButton.setText("Playing");
+            }
+            else {
+                player.pause();
+                playPauseButton.setText("Paused");
+            }
+        }
+
+        if(e.getKeyCode() == KeyEvent.VK_LEFT){
+            player.setVolume(player.getVolume()-10);
+            volumeSlider.setValue(player.getVolume());
+        }
+
+        if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+            player.setVolume(player.getVolume()+10);
+            volumeSlider.setValue(player.getVolume());
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }

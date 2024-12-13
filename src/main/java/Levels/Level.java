@@ -3,14 +3,10 @@ package Levels;
 import ControlPanel.ControlPanel;
 import Drawable.*;
 import Engine.*;
-import Engine.Window;
 
 import javax.swing.*;
 
 import java.util.ArrayList;
-
-import static Input.KeyListener.isKeyPressed;
-import static org.lwjgl.glfw.GLFW.*;
 
 public class Level {
 
@@ -44,8 +40,14 @@ public class Level {
 
         for(Drawable each : actors){
 
-            if(each instanceof MusicHeart && panel.getDrawableShape()==DrawableShape.HEART) each.draw(dt);
-            if(each instanceof MusicCircle && panel.getDrawableShape()==DrawableShape.CIRCLE) each.draw(dt);
+            switch(panel.getDrawableShape()){
+                case DrawableShape.HEART:
+                    if(each instanceof MusicHeart) each.draw(dt);
+                    break;
+                case DrawableShape.CIRCLE:
+                    if(each instanceof MusicCircle) each.draw(dt);
+                    break;
+            }
 
             float interpolatedBassVolume = bassInterpolator.interpolate(player.getBass());
             float interpolatedMiddleVolume = middleInterpolator.interpolate(player.getMiddle());
@@ -60,8 +62,5 @@ public class Level {
         }
 
         panel.updateProgressBar(dt);
-
-        if (isKeyPressed(GLFW_KEY_ESCAPE))
-            glfwSetWindowShouldClose(Window.get().getWindow(), true);
     }
 }

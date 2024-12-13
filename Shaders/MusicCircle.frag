@@ -87,8 +87,14 @@ void main() {
 
     if(colorTemplate==0) color = 0.5 + 0.5 * cos(uTime+uv.xyx+vec3(0,2,4));
     else if(colorTemplate==1) color = vec3(0,0,0.9) + vec3(0,0.7,0.5) * cos(uTime+uv.xyx+vec3(2,1,4));
-    else if(colorTemplate==2) color = vec3(1.5,0,0) * mix(1, 0, smoothstep(0.0, 0.5, ov(uv*5.0)));
-    else if(colorTemplate==3) color = mix(vec3(0,0,1), vec3(1,0,0), pow(smoothstep(0.0, 0.5, voronoi(uv*5.0)),0.5));
+    else if(colorTemplate==2) {
+        color = mix(vec3(1,0,0.8), vec3(1.6,0.0,0), smoothstep(0.0, 0.5, ov(uv*5.0)));
+        d *= mix(0.2, 1, voronoi(uv*5.0));
+    }
+    else if(colorTemplate==3) {
+        color = mix(vec3(0,0,1), vec3(1,0,0), pow(smoothstep(0.0, 0.5, ov(uv*1.0)),0.5));
+        d *= mix(1, 0, smoothstep(0.0, 0.5, ov(uv*5.0)));
+    }
     else color = vec3(1);
 
     vec3 col = (d>0.0) ? vec3(0) : color;

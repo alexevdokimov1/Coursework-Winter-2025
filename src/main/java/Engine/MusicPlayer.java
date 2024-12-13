@@ -151,14 +151,14 @@ public class MusicPlayer implements SoundControlInterface {
 
     @Override
     public void setVolume(int value) {
-        if(line == null) return;
         this.volume = Math.clamp(value, 0, 100);
+        if(line == null) return;
         final FloatControl volumeControl = (FloatControl) line.getControl( FloatControl.Type.MASTER_GAIN );
         volumeControl.setValue( 20.0f * (float) Math.log10( this.volume / 100.0 ) );
     }
 
     @Override
-    public float getVolume() {
+    public int getVolume() {
         return this.volume;
     }
 

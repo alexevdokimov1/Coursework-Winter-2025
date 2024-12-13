@@ -19,73 +19,42 @@ float dot2( in vec2 v ) { return dot(v,v); }
 
 #define PI 3.1415926535897932384626433832795
 
-
-vec2 hash2(vec2 p ) {
-   return fract(sin(vec2(dot(p, vec2(123.4, 748.6)), dot(p, vec2(547.3, 659.3))))*5232.85324);
-}
-float hash(vec2 p) {
-  return fract(sin(dot(p, vec2(43.232, 75.876)))*4526.3257);
-}
-
-float voronoi(vec2 p) {
-    vec2 n = floor(p);
-    vec2 f = fract(p);
-    float md = 5.0;
-    vec2 m = vec2(0.0);
-    for (int i = -1;i<=1;i++) {
-        for (int j = -1;j<=1;j++) {
-            vec2 g = vec2(i, j);
-            vec2 o = hash2(n+g);
-            o = 0.5+0.5*sin(uTime+5.038*o);
-            vec2 r = g + o - f;
-            float d = dot(r, r);
-            if (d<md) {
-              md = d;
-              m = n+g+o;
-            }
-        }
-    }
-    return md;
-}
-
-float ov(vec2 p) {
-    float v = 0.0;
-    float a = 0.4;
-    for (int i = 0;i<3;i++) {
-        v+= voronoi(p)*a;
-        p*=2.0;
-        a*=0.5;
-    }
-    return v;
-}
-
 float radialSin(in float x, in float height, in float up){
     return (sin(x+3*PI/2)+1)*height/2+up;
 }
 
-float sdHeart( in vec2 p )
+float sdStar(in vec2 p, in float r, in float n, in float w)
 {
+    // these 5 lines can be precomputed for a given shape
+    //float m = n*(1.0-w) + w*2.0;
+    float m = n + w*(2.0-n);
+
+    float an = 3.1415927/n;
+    float en = 3.1415927/m;
+    vec2  racs = r*vec2(cos(an),sin(an));
+    vec2   ecs =   vec2(cos(en),sin(en)); // ecs=vec2(0,1) and simplify, for regular polygon,
+
+    // symmetry (optional)
     p.x = abs(p.x);
 
-    if( p.y+p.x>1.0 )
-        return sqrt(dot2(p-vec2(0.25,0.75))) - sqrt(2.0)/4.0;
-    return sqrt(min(dot2(p-vec2(0.00,1.00)),
-                    dot2(p-0.5*max(p.x+p.y,0.0)))) * sign(p.x-p.y);
+    // reduce to first sector
+    float bn = mod(atan(p.x,p.y),2.0*an) - an;
+    p = length(p)*vec2(cos(bn),abs(sin(bn)));
+
+    // line sdf
+    p -= racs;
+    p += ecs*clamp( -dot(p,ecs), 0.0, racs.y/ecs.y);
+    return length(p)*sign(p.x);
 }
 
 void main() {
     vec2 uv = position.xy;
     uv.x *= ration;
 
-    uv /= 1.2;
-
-    uv /= bassFrVolume * 1.2;
-    uv.y += 0.5;
-
     float x = uv.x*20+uTime*2;
     float volumeValue = pow(bassFrVolume, 2.0);
 
-    float d = sdHeart(uv)*pow(radialSin(x, volumeValue, 0.8f), 2.f);
+    float d = sdStar(uv,10,0.7)*pow(radialSin(x, volumeValue, 0.8f), 2.f);
 
     vec3 col;
      // coloring

@@ -4,13 +4,12 @@ import javax.sound.sampled.*;
 import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import ControlPanel.SoundControlInterface;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
 import org.apache.commons.math3.complex.Complex;
 
-public class MusicPlayer implements SoundControlInterface {
+public class MusicPlayer {
 
     private AudioInputStream audioInputStream;
     private SourceDataLine line;
@@ -100,12 +99,10 @@ public class MusicPlayer implements SoundControlInterface {
         return (float) ((spectrumVolume - minDB) / (maxDB - minDB));
     }
 
-    @Override
     public void pause() {
         isPaused.set(true);
     }
 
-    @Override
     public void resume() {
         isPaused.set(false);
         synchronized (this) {
@@ -113,7 +110,6 @@ public class MusicPlayer implements SoundControlInterface {
         }
     }
 
-    @Override
     public boolean isPaused(){
         return this.isPaused.get();
     }
@@ -122,7 +118,6 @@ public class MusicPlayer implements SoundControlInterface {
         return isPlaying.get();
     }
 
-    @Override
     public boolean openFile(String filename){
         try {
             synchronized (playThread) {
@@ -149,7 +144,6 @@ public class MusicPlayer implements SoundControlInterface {
         }
     }
 
-    @Override
     public void setVolume(int value) {
         this.volume = Math.clamp(value, 0, 100);
         if(line == null) return;
@@ -157,18 +151,15 @@ public class MusicPlayer implements SoundControlInterface {
         volumeControl.setValue( 20.0f * (float) Math.log10( this.volume / 100.0 ) );
     }
 
-    @Override
     public int getVolume() {
         return this.volume;
     }
 
-    @Override
     public int getPlaybackPosition() {
         if(line==null) return 0;
         return (int)Math.floor(line.getMicrosecondPosition()*1e-6);
     }
 
-    @Override
     public int getDuration() {
         if(audioInputStream == null) return -1;
         AudioFormat format = audioInputStream.getFormat();

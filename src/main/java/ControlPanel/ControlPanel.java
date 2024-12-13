@@ -4,13 +4,9 @@ import Drawable.DrawableShape;
 import Engine.MusicPlayer;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.event.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.File;
 import java.nio.file.FileSystems;
 
@@ -161,12 +157,13 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 boolean success  = player.openFile(file.getAbsolutePath());
-                if(success) {
-                    playPauseButton.setText("Playing");
-                    playPauseButton.setEnabled(true);
+                playPauseButton.setText("Playing");
+                playPauseButton.setEnabled(true);
+                if(!success) {
+                   showMessageDialog(ControlPanel.this,
+                            "File open error");
+                    playPauseButton.setEnabled(false);
                 }
-                else showMessageDialog(ControlPanel.this,
-                        "File open error");
             }
         }
 

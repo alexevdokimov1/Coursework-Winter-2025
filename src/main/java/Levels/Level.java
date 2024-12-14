@@ -61,6 +61,6 @@ public class Level {
             }
         }
 
-        panel.updateProgressBar(dt);
+        panel.updateProgressBar();
     }
 }

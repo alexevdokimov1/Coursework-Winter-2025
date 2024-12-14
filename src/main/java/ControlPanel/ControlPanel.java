@@ -85,7 +85,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
 
         volumeSlider.addChangeListener(this);
         volumeSlider.setFocusable(false);
-        volumeSlider.setValue((int) player.getVolume());
+        volumeSlider.setValue(player.getVolume());
 
         fc.setCurrentDirectory(new File
                 (System.getProperty("user.home") +
@@ -199,7 +199,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
         }
     }
 
-    public void updateProgressBar(float dt){
+    public void updateProgressBar(){
         float ration = (float) player.getPlaybackPosition() / player.getDuration();
         playbackProgressBar.setValue((int) (ration*100));
         String currentTimeText;

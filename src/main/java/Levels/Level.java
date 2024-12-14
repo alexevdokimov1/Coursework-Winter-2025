@@ -38,6 +38,10 @@ public class Level {
         middleInterpolator.update(dt);
         highInterpolator.update(dt);
 
+        float interpolatedBassVolume = bassInterpolator.interpolate(player.getBass());
+        float interpolatedMiddleVolume = middleInterpolator.interpolate(player.getMiddle());
+        float interpolatedHighVolume = highInterpolator.interpolate(player.getHigh());
+
         for(Drawable each : actors){
 
             switch(panel.getDrawableShape()){
@@ -48,10 +52,6 @@ public class Level {
                     if(each instanceof MusicCircle) each.draw(dt);
                     break;
             }
-
-            float interpolatedBassVolume = bassInterpolator.interpolate(player.getBass());
-            float interpolatedMiddleVolume = middleInterpolator.interpolate(player.getMiddle());
-            float interpolatedHighVolume = highInterpolator.interpolate(player.getHigh());
 
             if(each instanceof MusicPlane){
                 ((MusicPlane) each).setBassVolume(interpolatedBassVolume);

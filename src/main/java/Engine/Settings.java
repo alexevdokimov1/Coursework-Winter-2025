@@ -8,7 +8,7 @@ import java.util.Properties;
 public class Settings {
     public static String getProperty(String key) throws IOException {
 
-        File file = new File("settings");
+        File file = new File("settings/GlobalWindowSettings");
 
         Properties properties = new Properties();
         properties.load(new FileReader(file));

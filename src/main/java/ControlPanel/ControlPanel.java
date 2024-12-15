@@ -64,9 +64,6 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
         float ration = (float) player.getPlaybackPosition() / player.getDuration();
         playbackProgressBar.setValue((int)(ration*100));
 
-        addKeyListener(this);
-
-        playPauseButton.addActionListener(this);
         playPauseButton.setFocusable(false);
         playPauseButton.setText("Ожидание");
         playPauseButton.setEnabled(false);
@@ -74,7 +71,6 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
         openFileButton.addActionListener(this);
         openFileButton.setFocusable(false);
 
-        volumeSlider.addChangeListener(this);
         volumeSlider.setFocusable(false);
         volumeSlider.setValue(player.getVolume());
 
@@ -85,24 +81,13 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
         fileMenu.add(fileItem_Open);
         fileMenu.add(fileItem_Exit);
 
-        fileItem_Open.addActionListener(this);
-        fileItem_Exit.addActionListener(this);
-
         shapeMenu.add(shapeItem_Circle);
         shapeMenu.add(shapeItem_Heart);
-
-        shapeItem_Circle.addActionListener(this);
-        shapeItem_Heart.addActionListener(this);
 
         colorTemplateMenu.add(colorTemplateItem_Default);
         colorTemplateMenu.add(colorTemplateItem_Type1);
         colorTemplateMenu.add(colorTemplateItem_Type2);
         colorTemplateMenu.add(colorTemplateItem_Type3);
-
-        colorTemplateItem_Default.addActionListener(this);
-        colorTemplateItem_Type1.addActionListener(this);
-        colorTemplateItem_Type2.addActionListener(this);
-        colorTemplateItem_Type3.addActionListener(this);
 
         bar.add(fileMenu);
         bar.add(shapeMenu);
@@ -151,6 +136,18 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
 
         } catch (IOException e) {
         }
+
+        fileItem_Open.addActionListener(this);
+        fileItem_Exit.addActionListener(this);
+        shapeItem_Circle.addActionListener(this);
+        shapeItem_Heart.addActionListener(this);
+        colorTemplateItem_Default.addActionListener(this);
+        colorTemplateItem_Type1.addActionListener(this);
+        colorTemplateItem_Type2.addActionListener(this);
+        colorTemplateItem_Type3.addActionListener(this);
+        volumeSlider.addChangeListener(this);
+        playPauseButton.addActionListener(this);
+        addKeyListener(this);
 
         setResizable(false);
         setSize(400,200);

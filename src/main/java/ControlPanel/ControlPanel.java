@@ -4,11 +4,9 @@ import Drawable.DrawableShape;
 import Engine.MusicPlayer;
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.*;
 import java.util.Properties;
 
@@ -20,21 +18,21 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
     private final JButton playPauseButton = new JButton();
     private final JButton openFileButton = new JButton("Открыть");
 
-    JMenuBar bar = new JMenuBar();
+    private final JMenuBar bar = new JMenuBar();
 
-    JMenu fileMenu = new JMenu("Файл");
-    JMenuItem fileItem_Open = new JMenuItem("Открыть");
-    JMenuItem fileItem_Exit = new JMenuItem("Выйти");
+    private final JMenu fileMenu = new JMenu("Файл");
+    private final JMenuItem fileItem_Open = new JMenuItem("Открыть");
+    private final JMenuItem fileItem_Exit = new JMenuItem("Выйти");
 
-    JMenu shapeMenu = new JMenu("Форма");
-    JMenuItem shapeItem_Circle = new JMenuItem("Кольцо");
-    JMenuItem shapeItem_Heart = new JMenuItem("Сердце");
+    private final JMenu shapeMenu = new JMenu("Форма");
+    private final JMenuItem shapeItem_Circle = new JMenuItem("Кольцо");
+    private final JMenuItem shapeItem_Heart = new JMenuItem("Сердце");
 
-    JMenu colorTemplateMenu = new JMenu("Цветовые схемы");
-    JMenuItem colorTemplateItem_Default = new JMenuItem("По умолчанию");
-    JMenuItem colorTemplateItem_Type1 = new JMenuItem("Тип 1");
-    JMenuItem colorTemplateItem_Type2 = new JMenuItem("Тип 2");
-    JMenuItem colorTemplateItem_Type3 = new JMenuItem("Тип 3");
+    private final JMenu colorTemplateMenu = new JMenu("Цветовые схемы");
+    private final JMenuItem colorTemplateItem_Default = new JMenuItem("По умолчанию");
+    private final JMenuItem colorTemplateItem_Type1 = new JMenuItem("Тип 1");
+    private final JMenuItem colorTemplateItem_Type2 = new JMenuItem("Тип 2");
+    private final JMenuItem colorTemplateItem_Type3 = new JMenuItem("Тип 3");
 
     private final JSlider volumeSlider = new JSlider(0,100);
     private final JProgressBar playbackProgressBar = new JProgressBar(0,100);
@@ -58,15 +56,6 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
 
     public ControlPanel(MusicPlayer player){
         super();
-
-        Properties properties = new Properties();
-        try {
-            properties.loadFromXML(Files.newInputStream(path));
-            shape = DrawableShape.getType(properties.getProperty("SHAPE"));
-            colorTemplate = Integer.parseInt(properties.getProperty("TEMPLATE"));
-        } catch (IOException e) {
-        }
-
         this.player = player;
 
         setLocationRelativeTo(null);
@@ -144,6 +133,25 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
         titlePanel.add(audioTitle);
         add(titlePanel, BorderLayout.NORTH);
 
+        Properties properties = new Properties();
+        try {
+            properties.loadFromXML(Files.newInputStream(path));
+            shape = DrawableShape.getType(properties.getProperty("SHAPE"));
+            colorTemplate = Integer.parseInt(properties.getProperty("TEMPLATE"));
+            player.setVolume(Integer.parseInt(properties.getProperty("VOLUME")));
+            volumeSlider.setValue(player.getVolume());
+
+            String lastOpenFile = properties.getProperty("FILE");
+
+            if(!lastOpenFile.equals("0")){
+                playPauseButton.setEnabled(true);
+                player.openFile(lastOpenFile);
+                player.pause();
+            }
+
+        } catch (IOException e) {
+        }
+
         setResizable(false);
         setSize(400,200);
 
@@ -171,6 +179,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 boolean success  = player.openFile(file.getAbsolutePath());
+                saveValues();
                 playPauseButton.setText("Играет");
                 playPauseButton.setEnabled(true);
                 if(!success) {
@@ -220,6 +229,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
     public void stateChanged(ChangeEvent e) {
         if(e.getSource() == volumeSlider){
             player.setVolume(volumeSlider.getValue());
+            saveValues();
         }
     }
 
@@ -270,11 +280,13 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
         if(e.getKeyCode() == KeyEvent.VK_LEFT){
             player.setVolume(player.getVolume()-10);
             volumeSlider.setValue(player.getVolume());
+            saveValues();
         }
 
         if(e.getKeyCode() == KeyEvent.VK_RIGHT){
             player.setVolume(player.getVolume()+10);
             volumeSlider.setValue(player.getVolume());
+            saveValues();
         }
     }
 
@@ -282,6 +294,8 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
         Properties properties = new Properties();
         properties.setProperty("SHAPE", shape.toString());
         properties.setProperty("TEMPLATE", Integer.toString(colorTemplate));
+        properties.setProperty("VOLUME", Integer.toString(player.getVolume()));
+        properties.setProperty("FILE",player.getFilepath());
         try {
             properties.storeToXML(Files.newOutputStream(path),"Config file for player appearance");
         } catch (IOException e) {

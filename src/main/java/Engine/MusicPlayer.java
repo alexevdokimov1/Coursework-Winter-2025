@@ -4,9 +4,7 @@ import javax.sound.sampled.*;
 import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.commons.math3.transform.DftNormalization;
-import org.apache.commons.math3.transform.FastFourierTransformer;
-import org.apache.commons.math3.transform.TransformType;
+import org.apache.commons.math3.transform.*;
 import org.apache.commons.math3.complex.Complex;
 
 public class MusicPlayer {
@@ -175,6 +173,8 @@ public class MusicPlayer {
     }
 
     public String getFilepath(){
-        return filepath;
+        if(filepath != null)
+            return filepath;
+        return "0";
     }
 }

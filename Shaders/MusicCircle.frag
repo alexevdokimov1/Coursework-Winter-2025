@@ -98,8 +98,8 @@ void main() {
         d *= mix(1, 0, smoothstep(0.0, 0.5, ov(uv*5.0)));
     }
     else if(colorTemplate==4) {
-        d = opOnion(uv, maxRadius, (circleThickness+0.1)*bassFrVolume, false, true);
-        color = mix(vec3(0, 0.5156862745098039, 0.7), vec3(2,2,2), smoothstep(0.0, 0.5, 1.0 - exp(-2.0*abs(ov(uv)))));
+        d = opOnion(uv, maxRadius, (circleThickness+0.1)*bassFrVolume, false, false);
+        color = mix(vec3(0, 0.5156862745098039, 0.7), vec3(2,2,2)*3*bassFrVolume, smoothstep(0.0, 0.5, 1.0 - exp(-2.0*abs(ov(uv)))));
         d *= mix(1, 0, smoothstep(0.0, 0.5, ov(uv)));
     }
     else color = vec3(1);

@@ -94,7 +94,8 @@ void main() {
     col = mix( col, vec3(0.1, 0.1, 0.1)*bassFrVolume, 1.0-smoothstep(0.0,0.05,abs(d)));
     }
     else if(colorTemplate == 1 ) {
-        vec3 noiseMix = mix(vec3(0.0,0.0,1.0),vec3(0),smoothstep(0,0.5f,ov(uv*15.0)));
+        vec3 colors = 0.5 + 0.5 * cos(uTime+uv.xyx+vec3(0,2,4)+ov(uv*10.0));
+        vec3 noiseMix = mix(colors,vec3(0),smoothstep(0,0.5f,ov(uv*15.0)));
         d += exp(-100.0*abs(d));
         col = (d>0.0) ? vec3(0) : noiseMix*pow(bassFrVolume, 1.5f)*2.0;
         col *= 1.0 - exp(-2.0*abs(d));

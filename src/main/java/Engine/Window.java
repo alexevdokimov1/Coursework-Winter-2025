@@ -77,13 +77,7 @@ public class Window {
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
         glfwWindowHint(GLFW_STENCIL_BITS, 4);
         glfwWindowHint(GLFW_SAMPLES, 4);
-
-        try {
-            boolean borderless = Boolean.parseBoolean(Settings.getProperty("Borderless"));
-            glfwWindowHint(GLFW_DECORATED, borderless? GLFW_FALSE : GLFW_TRUE);
-        } catch (Exception e) {
-            glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
-        }
+        glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
 
         GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         if(videoMode==null) return;

@@ -111,6 +111,12 @@ void main() {
                 col *= 1.0 - exp(-5.0*abs(d));
                 col = mix( col, vec3(0.2, 0.2, 0.2)*bassFrVolume, 1.0-smoothstep(0.0,0.1,abs(d)));
     }
+    else if(colorTemplate==4) {
+            col = (d>0.0) ? vec3(0) : mix(vec3(1, 0.8156862745098039, 0),
+                        vec3(1.3,1.3,1.3),smoothstep(0,0.5f,ov(uv*5.0)))*pow(bassFrVolume, 1.5f)*2.0;
+                        col *= 1.0 - exp(-15.0*abs(d));
+                        col = mix( col, vec3(1, 0.8980392156862745, 0.45098039215686275)*bassFrVolume, 1.0-smoothstep(0.0,0.1,abs(d)));
+    }
     else col = (d>0.0) ? vec3(0) : vec3(1);
 
     outColor = vec4(col, 1.f);

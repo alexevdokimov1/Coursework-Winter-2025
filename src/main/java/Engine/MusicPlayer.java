@@ -119,8 +119,8 @@ public class MusicPlayer {
     public boolean openFile(String filename){
         try {
             synchronized (playThread) {
-                if (!(new File(filename).exists())) throw new FileNotFoundException();
-                if (!filename.endsWith(".wav")) throw new UnsupportedAudioFileException();
+                if (!(new File(filename).exists())) return false;
+                if (!filename.endsWith(".wav")) return false;
 
                 this.filepath = filename;
                 file = new File(filename);
@@ -175,6 +175,6 @@ public class MusicPlayer {
     public String getFilepath(){
         if(filepath != null)
             return filepath;
-        return "0";
+        return "";
     }
 }

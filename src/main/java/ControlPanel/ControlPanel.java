@@ -33,6 +33,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
     private final JMenuItem colorTemplateItem_Type1 = new JMenuItem("Тип 1");
     private final JMenuItem colorTemplateItem_Type2 = new JMenuItem("Тип 2");
     private final JMenuItem colorTemplateItem_Type3 = new JMenuItem("Тип 3");
+    private final JMenuItem colorTemplateItem_Type4 = new JMenuItem("Тип 4");
 
     private final JSlider volumeSlider = new JSlider(0,100);
     private final JProgressBar playbackProgressBar = new JProgressBar(0,100);
@@ -88,6 +89,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
         colorTemplateMenu.add(colorTemplateItem_Type1);
         colorTemplateMenu.add(colorTemplateItem_Type2);
         colorTemplateMenu.add(colorTemplateItem_Type3);
+        colorTemplateMenu.add(colorTemplateItem_Type4);
 
         bar.add(fileMenu);
         bar.add(shapeMenu);
@@ -128,9 +130,9 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
 
             String lastOpenFile = properties.getProperty("FILE");
 
-            if(!lastOpenFile.equals("0")){
-                playPauseButton.setEnabled(true);
-                player.openFile(lastOpenFile);
+            if(!lastOpenFile.equals("")){
+                if(player.openFile(lastOpenFile))
+                    playPauseButton.setEnabled(true);
                 player.pause();
             }
 
@@ -145,6 +147,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
         colorTemplateItem_Type1.addActionListener(this);
         colorTemplateItem_Type2.addActionListener(this);
         colorTemplateItem_Type3.addActionListener(this);
+        colorTemplateItem_Type4.addActionListener(this);
         volumeSlider.addChangeListener(this);
         playPauseButton.addActionListener(this);
         addKeyListener(this);
@@ -208,6 +211,11 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
 
         if (e.getSource() == colorTemplateItem_Type3){
             this.colorTemplate = 3;
+            saveValues();
+        }
+
+        if (e.getSource() == colorTemplateItem_Type4){
+            this.colorTemplate = 4;
             saveValues();
         }
 

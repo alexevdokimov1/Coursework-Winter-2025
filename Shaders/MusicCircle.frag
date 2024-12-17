@@ -47,7 +47,7 @@ float voronoi(vec2 p) {
             }
         }
     }
-    return md;
+    return md*bassFrVolume;
 }
 
 float ov(vec2 p) {
@@ -74,26 +74,33 @@ float sdCircle( in vec2 p, in float radius )
     return length(p) - radius*pow((0.8+bassFrVolume*0.2),2);
 }
 
-float opOnion( in vec2 p, in float radius, in float r )
+float opOnion( in vec2 p, in float radius, in float r, bool applySin, bool applyMod)
 {
     float x = p.x*200;
-    return abs(sdCircle(p, radius)) - r*radialSin(x, pow(bassFrVolume, 2.0)*2, 0.7f)*
-    modValue(x+uTime, pow(highFrVolume,2), 1.f);
+    float finalRadius = r;
+    if(applySin) finalRadius *= radialSin(x, pow(bassFrVolume, 2.0)*2, 0.7f);
+    if(applyMod) finalRadius *= modValue(x+uTime, pow(highFrVolume,2), 1.f);
+    return abs(sdCircle(p, radius)) - finalRadius;
 }
 
 void main() {
-    float d = opOnion(uv, maxRadius, circleThickness);
+    float d = opOnion(uv, maxRadius, circleThickness, true, true);
     vec3 color;
 
     if(colorTemplate==0) color = 0.5 + 0.5 * cos(uTime+uv.xyx+vec3(0,2,4));
     else if(colorTemplate==1) color = vec3(0,0,0.9) + vec3(0,0.7,0.5) * cos(uTime+uv.xyx+vec3(2,1,4));
     else if(colorTemplate==2) {
-        color = mix(vec3(1,0,0.8), vec3(2,0.0,0), smoothstep(0.0, 0.5, ov(uv*5.0)));
+        color = mix(vec3(1,0,0.8)*2, vec3(2,0.0,0)*2, smoothstep(0.0, 0.5, ov(uv*5.0)));
         d *= mix(0.2, 1, voronoi(uv*5.0)) * bassFrVolume;
     }
     else if(colorTemplate==3) {
-        color = mix(vec3(0,0,1), vec3(1,0,0), pow(smoothstep(0.0, 0.5, ov(uv*1.0)),0.5));
+        color = mix(vec3(0,0,1)*2, vec3(1,0,0)*2, pow(smoothstep(0.0, 0.5, ov(uv*1.0)),0.5));
         d *= mix(1, 0, smoothstep(0.0, 0.5, ov(uv*5.0)));
+    }
+    else if(colorTemplate==4) {
+        d = opOnion(uv, maxRadius, (circleThickness+0.1)*bassFrVolume, false, true);
+        color = mix(vec3(0, 0.5156862745098039, 0.7), vec3(2,2,2), smoothstep(0.0, 0.5, 1.0 - exp(-2.0*abs(ov(uv)))));
+        d *= mix(1, 0, smoothstep(0.0, 0.5, ov(uv)));
     }
     else color = vec3(1);
 

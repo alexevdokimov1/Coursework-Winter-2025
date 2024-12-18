@@ -89,7 +89,10 @@ void main() {
     vec3 color;
 
     if(colorTemplate==0) color = 0.5 + 0.5 * cos(uTime+uv.xyx+vec3(0,2,4));
-    else if(colorTemplate==1) color = vec3(0,0,0.9) + vec3(0,0.7,0.5) * cos(uTime+uv.xyx+vec3(2,1,4));
+    else if(colorTemplate==1) {
+         color = mix(vec3(0.1568627450980392, 0.29411764705882354, 0.45098039215686275)*4, vec3(0.9019607843137255,0.2235294117647059,0.5294117647058824)*4, smoothstep(0.0, 0.5, ov(uv*5.0)));
+         d *= mix(0.2, 1, voronoi(uv*5.0)) * bassFrVolume;
+    }
     else if(colorTemplate==2) {
         color = mix(vec3(1,0,0.8)*2, vec3(2,0.0,0)*2, smoothstep(0.0, 0.5, ov(uv*5.0)));
         d *= mix(0.2, 1, voronoi(uv*5.0)) * bassFrVolume;

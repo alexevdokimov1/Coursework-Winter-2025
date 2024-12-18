@@ -88,8 +88,6 @@ public class Window {
 
         try {
             if(Boolean.parseBoolean(Settings.getProperty("Fullscreen"))) {
-                width = videoMode.width();
-                height = videoMode.height();
                 glfwWindow = glfwCreateWindow(width, height, "Window", glfwGetPrimaryMonitor(), NULL);
                 System.out.println("Fullscreen mode is set");
             }

@@ -78,25 +78,13 @@ public class Window {
         glfwWindowHint(GLFW_STENCIL_BITS, 4);
         glfwWindowHint(GLFW_SAMPLES, 4);
         glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
         GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         if(videoMode==null) return;
 
-        int width;
-        int height;
-        try {
-            width = Integer.parseInt(Settings.getProperty("Width"));
-            height = Integer.parseInt(Settings.getProperty("Height"));
-
-            System.out.println("Resolution set to " + width + "x" + height);
-        } catch (Exception e) {
-            width = videoMode.width();
-            height = videoMode.height();
-
-            System.out.println("Width and Height set to screen resolution");
-
-            System.out.println("Resolution set to " + width + "x" + height);
-        }
+        int width = videoMode.width();
+        int height = videoMode.height();
 
         try {
             if(Boolean.parseBoolean(Settings.getProperty("Fullscreen"))) {

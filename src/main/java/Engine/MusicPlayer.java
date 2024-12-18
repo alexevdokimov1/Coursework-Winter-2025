@@ -173,8 +173,7 @@ public class MusicPlayer {
     }
 
     public String getFilepath(){
-        if(filepath != null)
-            return filepath;
-        return "";
+        if(filepath == null) return "";
+        return filepath;
     }
 }

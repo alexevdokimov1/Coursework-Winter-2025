@@ -130,13 +130,14 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
 
             String lastOpenFile = properties.getProperty("FILE");
 
-            if(!lastOpenFile.equals("")){
+            if(!lastOpenFile.isEmpty()){
                 if(player.openFile(lastOpenFile))
                     playPauseButton.setEnabled(true);
                 player.pause();
             }
 
         } catch (IOException e) {
+            System.out.println(e);
         }
 
         fileItem_Open.addActionListener(this);

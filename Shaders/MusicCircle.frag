@@ -84,6 +84,7 @@ float opOnion( in vec2 p, in float radius, in float r, bool applySin, bool apply
 }
 
 void main() {
+    uv.y += 0.1;
     float d = opOnion(uv, maxRadius, circleThickness, true, true);
     vec3 color;
 

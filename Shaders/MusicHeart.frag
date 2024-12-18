@@ -80,7 +80,7 @@ void main() {
     uv /= 1.2;
 
     uv /= bassFrVolume * 1.2;
-    uv.y += 0.5;
+    uv.y += 0.7;
 
     float x = uv.x*20+uTime*2;
     float volumeValue = pow(bassFrVolume, 2.0);

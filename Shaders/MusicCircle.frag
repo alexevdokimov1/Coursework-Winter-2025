@@ -90,7 +90,7 @@ void main() {
 
     if(colorTemplate==0) color = 0.5 + 0.5 * cos(uTime+uv.xyx+vec3(0,2,4));
     else if(colorTemplate==1) {
-         color = mix(vec3(0.1568627450980392, 0.29411764705882354, 0.45098039215686275)*4, vec3(0.9019607843137255,0.2235294117647059,0.5294117647058824)*4, smoothstep(0.0, 0.5, ov(uv*5.0)));
+         color = mix(vec3(0.1568627450980392, 0.29411764705882354, 0.45098039215686275)*6, vec3(0.9019607843137255,0.2235294117647059,0.5294117647058824)*6, smoothstep(0.0, 0.5, ov(uv*5.0)));
          d *= mix(0.2, 1, voronoi(uv*5.0)) * bassFrVolume;
     }
     else if(colorTemplate==2) {
@@ -103,7 +103,7 @@ void main() {
     }
     else if(colorTemplate==4) {
         d = opOnion(uv, maxRadius, (circleThickness+0.1)*bassFrVolume, false, false);
-        color = mix(vec3(0, 0.5156862745098039, 0.7), vec3(2,2,2)*3*bassFrVolume, smoothstep(0.0, 0.5, 1.0 - exp(-2.0*abs(ov(uv)))));
+        color = mix(vec3(0, 0.5156862745098039, 0.7), vec3(2,2,2)*3*bassFrVolume, smoothstep(0.0, 0.5, 1.0 - exp(-3.0*abs(ov(uv)))));
         d *= mix(1, 0, smoothstep(0.0, 0.5, ov(uv)));
     }
     else color = vec3(1);

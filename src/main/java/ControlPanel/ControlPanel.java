@@ -15,6 +15,8 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class ControlPanel extends JFrame implements ActionListener, ChangeListener, KeyListener {
 
+    private final Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
     private final JButton playPauseButton = new JButton();
     private final JButton openFileButton = new JButton("Открыть");
 
@@ -155,6 +157,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
 
         setResizable(false);
         setSize(400,200);
+        setLocation(dim.width-400, dim.height-300);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);

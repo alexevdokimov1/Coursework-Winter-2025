@@ -47,7 +47,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
     private DrawableShape shape = DrawableShape.CIRCLE;
     private final MusicPlayer player;
 
-    private final Path path = Paths.get("settings/Player Config.xml");
+    private final Path path = Paths.get("config.xml");
 
     public int getColorTemplate() {
         return colorTemplate;
@@ -139,7 +139,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
             }
 
         } catch (IOException e) {
-            System.out.println(e);
+            System.out.println("Config file not found. Using default start");
         }
 
         fileItem_Open.addActionListener(this);
@@ -308,7 +308,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
         try {
             properties.storeToXML(Files.newOutputStream(path),"Config file for player appearance");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Failed to save user settings");
         }
     }
 

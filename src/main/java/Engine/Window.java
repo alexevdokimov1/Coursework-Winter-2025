@@ -74,7 +74,6 @@ public class Window {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
         glfwWindowHint(GLFW_STENCIL_BITS, 4);
         glfwWindowHint(GLFW_SAMPLES, 4);
         glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
@@ -86,20 +85,7 @@ public class Window {
         int width = videoMode.width();
         int height = videoMode.height();
 
-        try {
-            if(Boolean.parseBoolean(Settings.getProperty("Fullscreen"))) {
-                glfwWindow = glfwCreateWindow(width, height, "Window", glfwGetPrimaryMonitor(), NULL);
-                System.out.println("Fullscreen mode is set");
-            }
-            else{
-                glfwWindow = glfwCreateWindow(width, height, "Window", NULL, NULL);
-                System.out.println("Windowed mode is set");
-            }
-
-        } catch (Exception e) {
-            glfwWindow = glfwCreateWindow(width, height, "Window", NULL, NULL);
-            System.err.println("No Fullscreen found");
-        }
+        glfwWindow = glfwCreateWindow(width, height, "Window", NULL, NULL);
 
         ration = (float) width /height;
 
@@ -122,20 +108,7 @@ public class Window {
         glfwShowWindow(glfwWindow);
         GL.createCapabilities();
 
-        try {
-            if(Boolean.parseBoolean(Settings.getProperty("VSync"))) {
-                glfwSwapInterval(1);
-                System.out.println("VSync on");
-            }
-            else{
-                glfwSwapInterval(0);
-                System.out.println("Not loaded: VSync off");
-            }
-
-        } catch (Exception e) {
-            glfwSwapInterval(1);
-            System.out.println("VSync off");
-        }
+        glfwSwapInterval(0);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

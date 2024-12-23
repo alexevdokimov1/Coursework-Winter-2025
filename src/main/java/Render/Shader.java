@@ -21,11 +21,9 @@ public class Shader {
     private String vertexSource;
     private String fragmentSource;
 
-    private String vertexFilename, fragmentFilename;
+    public Shader(){}
 
-    public Shader(String vertexFilepath, String fragmentFilepath){
-        this.vertexFilename = vertexFilepath;
-        this.fragmentFilename = fragmentFilepath;
+    public void addFileSource(String vertexFilepath, String fragmentFilepath){
         try{
             String filepath_vert =  "Shaders/"+vertexFilepath+".vert";
             vertexSource = new String(Files.readAllBytes(Paths.get(filepath_vert)));
@@ -41,7 +39,10 @@ public class Shader {
         }
     }
 
-    public Shader(){}
+    public void addSource(String vertexSource, String fragmentSource){
+        this.vertexSource = vertexSource;
+        this.fragmentSource = fragmentSource;
+    }
 
     public void compile(){
         shaderProgram = glCreateProgram();
@@ -51,7 +52,7 @@ public class Shader {
         glShaderSource(vertexShader, vertexSource);
         glCompileShader(vertexShader);
         if(glGetShaderi(vertexShader, GL_COMPILE_STATUS) == GL_FALSE){
-            System.err.printf("Error during vertex shader compilation: %s\n", this.vertexFilename);
+            System.err.println("Error during vertex shader compilation");
             System.err.print(glGetShaderInfoLog(vertexShader));
             return;
         }
@@ -59,7 +60,7 @@ public class Shader {
         glShaderSource(fragmentShader, fragmentSource);
         glCompileShader(fragmentShader);
         if(glGetShaderi(fragmentShader, GL_COMPILE_STATUS) == GL_FALSE){
-            System.err.printf("Error during fragment shader compilation: %s\n", this.fragmentFilename);
+            System.err.println("Error during fragment shader compilation");
             System.err.print(glGetShaderInfoLog(fragmentShader));
             return;
         }

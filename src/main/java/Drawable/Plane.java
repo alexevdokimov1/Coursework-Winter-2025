@@ -2,22 +2,20 @@ package Drawable;
 
 import Engine.Time;
 import Engine.Window;
-import Render.Shader;
+import Render.*;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class Plane extends Drawable {
 
-    public Plane(String vertexFilepath, String fragmentFilepath){
-        shader = new Shader(vertexFilepath, fragmentFilepath);
+    public Plane(String vertexSource, String fragmentSource){
+        shader = new Shader();
+        shader.addSource(vertexSource, fragmentSource);
         shader.compile();
     }
 
     public Plane(String fragmentFilepath){
-        this("Default", fragmentFilepath);
-    }
-
-    public Plane(){
-        this("Default");
+        this(ShaderDataStrings.DEFAULT_VERT_SHADER, fragmentFilepath);
     }
 
     @Override

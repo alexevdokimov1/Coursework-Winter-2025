@@ -6,17 +6,8 @@ public class MusicPlane extends Plane{
     private float highFrVolume;
     private int colorTemplate = 0;
 
-    public MusicPlane(String fragmentFilePath){
-        super(fragmentFilePath);
-    }
-
-    public MusicPlane(String fragmentFilePath, int colorTemplate){
-        this(fragmentFilePath);
-        this.colorTemplate = colorTemplate;
-    }
-
-    public MusicPlane(){
-        this("Default");
+    public MusicPlane(String fragmentSource){
+        super(fragmentSource);
     }
 
     @Override

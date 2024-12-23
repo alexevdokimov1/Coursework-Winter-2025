@@ -44,8 +44,6 @@ public class Shader {
     public Shader(){}
 
     public void compile(){
-        long start = System.currentTimeMillis();
-
         shaderProgram = glCreateProgram();
         int vertexShader = glCreateShader(GL_VERTEX_SHADER);
         int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -70,10 +68,6 @@ public class Shader {
         glAttachShader(shaderProgram, fragmentShader);
         glLinkProgram(shaderProgram);
         glValidateProgram(shaderProgram);
-
-        long finish = System.currentTimeMillis();
-        long timeElapsed = finish - start;
-        System.out.printf("Vertex shader '%s' and fragment shader '%s' compiled for %d ms\n", vertexFilename, fragmentFilename, timeElapsed);
     }
 
     public void use(){

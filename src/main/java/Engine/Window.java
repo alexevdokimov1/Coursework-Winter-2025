@@ -36,10 +36,6 @@ public class Window {
         return Window.window;
     }
 
-    public long getWindow(){
-        return glfwWindow;
-    }
-
     public void run(){
         init();
         loop();

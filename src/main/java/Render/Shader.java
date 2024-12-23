@@ -52,7 +52,7 @@ public class Shader {
         glShaderSource(vertexShader, vertexSource);
         glCompileShader(vertexShader);
         if(glGetShaderi(vertexShader, GL_COMPILE_STATUS) == GL_FALSE){
-            System.err.printf("Error during vertex shader compilation\n");
+            System.err.println("Error during vertex shader compilation");
             System.err.print(glGetShaderInfoLog(vertexShader));
             return;
         }
@@ -60,7 +60,7 @@ public class Shader {
         glShaderSource(fragmentShader, fragmentSource);
         glCompileShader(fragmentShader);
         if(glGetShaderi(fragmentShader, GL_COMPILE_STATUS) == GL_FALSE){
-            System.err.printf("Error during fragment shader compilation\n");
+            System.err.println("Error during fragment shader compilation");
             System.err.print(glGetShaderInfoLog(fragmentShader));
             return;
         }

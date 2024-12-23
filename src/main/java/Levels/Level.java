@@ -26,7 +26,7 @@ public class Level {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-            System.out.println("Style is unavalable");
+            System.out.println("Style is unavailable");
         }
 
         panel = new ControlPanel(this.player);

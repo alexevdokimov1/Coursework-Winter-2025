@@ -87,7 +87,7 @@ public class ShaderDataStrings {
                         }
                     }
                 }
-                return md*bassFrVolume;
+                return md;
             }
             
             float ov(vec2 p) {
@@ -142,9 +142,10 @@ public class ShaderDataStrings {
                     d *= mix(1, 0, smoothstep(0.0, 0.5, ov(uv*5.0)));
                 }
                 else if(colorTemplate==4) {
+                    float noise = ov(uv)*bassFrVolume;
                     d = opOnion(uv, maxRadius, (circleThickness+0.1)*bassFrVolume, false, false);
-                    color = mix(vec3(0, 0.5156862745098039, 0.7), vec3(2,2,2)*3*bassFrVolume, smoothstep(0.0, 0.5, 1.0 - exp(-3.0*abs(ov(uv)))));
-                    d *= mix(1, 0, smoothstep(0.0, 0.5, ov(uv)));
+                    color = mix(vec3(0.2, 0.2, 0.7)*1.2, vec3(1.5,1.5,2)*3*bassFrVolume, smoothstep(0.0, 0.5, 1.0 - exp(-3.0*abs(noise))));
+                    d *= mix(1, 0, smoothstep(0.0, 0.5, noise));
                 }
                 else color = vec3(1);
             
@@ -176,7 +177,6 @@ public class ShaderDataStrings {
             float dot2( in vec2 v ) { return dot(v,v); }
             
             #define PI 3.1415926535897932384626433832795
-            
             
             vec2 hash2(vec2 p ) {
                return fract(sin(vec2(dot(p, vec2(123.4, 748.6)), dot(p, vec2(547.3, 659.3))))*5232.85324);

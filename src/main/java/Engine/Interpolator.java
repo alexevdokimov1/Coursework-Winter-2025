@@ -4,14 +4,8 @@ public class Interpolator {
 
     private float lastKnownVolume = 0.f;
     private float alpha = 0.f;
-    private final float speed;
-
-    public Interpolator(float interpolationSpeed){
-        this.speed=interpolationSpeed;
-    }
 
     public Interpolator(){
-        this(1.f);
     }
 
     public static float linearInterpolate(float a, float b, float alpha) {
@@ -24,7 +18,7 @@ public class Interpolator {
     }
 
     public void update(float dt){
-        if(alpha < 1) alpha+=dt*speed;
+        if(alpha < 1) alpha+=dt;
         else alpha = 0.f;
     }
 }

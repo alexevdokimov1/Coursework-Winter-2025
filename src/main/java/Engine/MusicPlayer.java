@@ -17,7 +17,6 @@ public class MusicPlayer {
     private File file;
     private int volume = 50;
     private final Thread playThread;
-    private String filepath;
     private final AtomicBoolean isPlaying = new AtomicBoolean(false);
 
     private static final float MIN_BASS_FREQ = 80.0f;
@@ -122,7 +121,6 @@ public class MusicPlayer {
                 if (!(new File(filename).exists())) return false;
                 if (!filename.endsWith(".wav")) return false;
 
-                this.filepath = filename;
                 file = new File(filename);
 
                 audioInputStream = AudioSystem.getAudioInputStream(file.getAbsoluteFile());
@@ -173,7 +171,7 @@ public class MusicPlayer {
     }
 
     public String getFilepath(){
-        if(filepath == null) return "";
-        return filepath;
+        if(file == null) return "";
+        return file.getAbsolutePath();
     }
 }

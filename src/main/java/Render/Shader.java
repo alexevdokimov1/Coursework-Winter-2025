@@ -23,22 +23,6 @@ public class Shader {
 
     public Shader(){}
 
-    public void addFileSource(String vertexFilepath, String fragmentFilepath){
-        try{
-            String filepath_vert =  "Shaders/"+vertexFilepath+".vert";
-            vertexSource = new String(Files.readAllBytes(Paths.get(filepath_vert)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try{
-            String filepath_frag =  "Shaders/"+fragmentFilepath+".frag";
-            fragmentSource = new String(Files.readAllBytes(Paths.get(filepath_frag)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void addSource(String vertexSource, String fragmentSource){
         this.vertexSource = vertexSource;
         this.fragmentSource = fragmentSource;
@@ -91,28 +75,6 @@ public class Shader {
 
     public void upload1f(String varName, float value){
         glUniform1f(glGetUniformLocation(shaderProgram, varName), value);
-    }
-
-    public void upload2f(String varName, Vector2f value){
-        glUniform2f(glGetUniformLocation(shaderProgram, varName), value.x, value.y);
-    }
-
-    public void upload1d(String varName, double value){
-        glUniform1d(glGetUniformLocation(shaderProgram, varName), value);
-    }
-
-    public void upload3f(String varName, Vector3f vec){
-        glUniform3f(glGetUniformLocation(shaderProgram, varName), vec.x, vec.y, vec.z);
-    }
-
-    public void uploadBoolean(String varName, boolean value){
-        glUniform1i(glGetUniformLocation(shaderProgram, varName), value ? 1 : 0);
-    }
-
-    public void uploadMat4(String varName, Matrix4f mat4){
-        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
-        mat4.get(matBuffer);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, varName), false, matBuffer);
     }
 
     public void uploadViewMatrix(String viewMatrixName) {

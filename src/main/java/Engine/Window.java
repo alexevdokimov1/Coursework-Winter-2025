@@ -1,8 +1,6 @@
 package Engine;
 
 import ControlPanel.ControlPanel;
-import Input.KeyListener;
-import Input.MouseListener;
 import Input.SizeListener;
 import Levels.Level;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -92,10 +90,6 @@ public class Window {
         glfwRequestWindowAttention(glfwWindow);
 
         GLFWErrorCallback.createPrint(System.err).set();
-        glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
-        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
-        glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
-        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
         glfwSetWindowSizeCallback(glfwWindow, SizeListener::resizeCallback);
         glfwSetInputMode(glfwWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 

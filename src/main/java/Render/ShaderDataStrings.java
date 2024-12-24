@@ -69,7 +69,7 @@ public class ShaderDataStrings {
               return fract(sin(dot(p, vec2(43.232, 75.876)))*4526.3257);
             }
             
-            float voronoi(vec2 p) {
+            float voronoi(vec2 p, bool bass = false) {
                 vec2 n = floor(p);
                 vec2 f = fract(p);
                 float md = 5.0;
@@ -87,14 +87,14 @@ public class ShaderDataStrings {
                         }
                     }
                 }
-                return md;
+                return md* (bass ? bassFrVolume:1);
             }
             
-            float ov(vec2 p) {
+            float ov(vec2 p, bool bass = false) {
                 float v = 0.0;
                 float a = 0.4;
                 for (int i = 0;i<3;i++) {
-                    v+= voronoi(p)*a;
+                    v+= voronoi(p, bass)*a;
                     p*=2.0;
                     a*=0.5;
                 }
@@ -138,14 +138,16 @@ public class ShaderDataStrings {
                     d *= mix(0.2, 1, voronoi(uv*5.0)) * bassFrVolume;
                 }
                 else if(colorTemplate==3) {
-                    color = mix(vec3(0,0,1)*2, vec3(1,0,0)*2, pow(smoothstep(0.0, 0.5, ov(uv*1.0)),0.5));
+                    color = mix(vec3(0,0,1)*2, vec3(1,0,0)*2, pow(smoothstep(0.0, 0.5, ov(uv)),0.5));
                     d *= mix(1, 0, smoothstep(0.0, 0.5, ov(uv*5.0)));
                 }
                 else if(colorTemplate==4) {
-                    float noise = ov(uv)*bassFrVolume;
-                    d = opOnion(uv, maxRadius, (circleThickness+0.1)*bassFrVolume, false, false);
+                    float noise = ov(uv, true);
+                    d = opOnion(uv, maxRadius, (circleThickness+0.1)*bassFrVolume, false, true);
                     color = mix(vec3(0.2, 0.2, 0.7)*1.2, vec3(1.5,1.5,2)*3*bassFrVolume, smoothstep(0.0, 0.5, 1.0 - exp(-3.0*abs(noise))));
                     d *= mix(1, 0, smoothstep(0.0, 0.5, noise));
+                    if (abs(bassFrVolume)>0.3) d -= 0.3*ov(uv*3, true);
+                    else d -= 0.5*ov(uv*2);
                 }
                 else color = vec3(1);
             

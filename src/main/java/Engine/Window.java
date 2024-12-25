@@ -79,7 +79,7 @@ public class Window {
         int width = videoMode.width();
         int height = videoMode.height();
 
-        glfwWindow = glfwCreateWindow(width, height, "Window", NULL, NULL);
+        glfwWindow = glfwCreateWindow(width, height, "Окно", NULL, NULL);
 
         ration = (float) width /height;
 

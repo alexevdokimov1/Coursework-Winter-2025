@@ -58,7 +58,7 @@ public class ControlPanel extends JFrame implements ActionListener, ChangeListen
     }
 
     public ControlPanel(MusicPlayer player){
-        super();
+        super("Плеер");
         this.player = player;
 
         setLocationRelativeTo(null);

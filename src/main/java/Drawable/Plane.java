@@ -21,7 +21,6 @@ public class Plane extends Drawable {
     @Override
     public void draw(float dt){
         shader.use();
-        //load basic data
         shader.uploadProjectionMatrix("uProjection");
         shader.uploadViewMatrix("uView");
         shader.upload1f("uTime", Time.getTime());

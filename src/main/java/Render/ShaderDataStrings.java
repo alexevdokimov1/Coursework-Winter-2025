@@ -69,7 +69,7 @@ public class ShaderDataStrings {
               return fract(sin(dot(p, vec2(43.232, 75.876)))*4526.3257);
             }
             
-            float voronoi(vec2 p, bool bass = false) {
+            float voronoi(vec2 p, bool bass) {
                 vec2 n = floor(p);
                 vec2 f = fract(p);
                 float md = 5.0;
@@ -90,7 +90,9 @@ public class ShaderDataStrings {
                 return md* (bass ? bassFrVolume:1);
             }
             
-            float ov(vec2 p, bool bass = false) {
+            float voronoi(vec2 p){ return voronoi(p, false); }
+            
+            float ov(vec2 p, bool bass) {
                 float v = 0.0;
                 float a = 0.4;
                 for (int i = 0;i<3;i++) {
@@ -100,6 +102,8 @@ public class ShaderDataStrings {
                 }
                 return v;
             }
+            
+            float ov(vec2 p) { return ov(p, false); }
             
             float radialSin(in float x, in float height, in float up){
                 return (sin(x+3*PI/2)+1)*height/2+up;
